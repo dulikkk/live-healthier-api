@@ -7,7 +7,6 @@ import dulikkk.livehealthierapi.domain.user.query.UserQueryRepository;
 import lombok.RequiredArgsConstructor;
 
 import static java.time.LocalDate.now;
-import static java.util.UUID.randomUUID;
 
 @RequiredArgsConstructor
 class UserInfoUpdater {

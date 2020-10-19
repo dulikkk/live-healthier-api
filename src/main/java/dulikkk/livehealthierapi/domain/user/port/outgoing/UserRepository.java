@@ -4,7 +4,7 @@ import dulikkk.livehealthierapi.domain.user.dto.UserDto;
 
 public interface UserRepository {
 
-    UserDto createUser(UserDto userDto);
+    UserDto saveUser(UserDto userDto);
 
     void updateUser(UserDto userDto);
 

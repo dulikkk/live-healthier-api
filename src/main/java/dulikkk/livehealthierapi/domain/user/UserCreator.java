@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.util.Set;
 
 import static java.time.LocalDate.now;
@@ -35,7 +33,7 @@ class UserCreator {
                 .userInfoDto(createUserInfoDto(newUserCommand.getNewUserInfoCommand()))
                 .build();
 
-        UserDto savedUser = userRepository.createUser(newUserDtoToSave);
+        UserDto savedUser = userRepository.saveUser(newUserDtoToSave);
 
         new Thread(() -> userActivator.createAndSendActivationToken(savedUser.getId(), savedUser.getEmail())).start();
 

@@ -3,7 +3,6 @@ package dulikkk.livehealthierapi.domain.user
 import dulikkk.livehealthierapi.domain.user.dto.NewUserCommand
 import dulikkk.livehealthierapi.domain.user.dto.NewUserInfoCommand
 import dulikkk.livehealthierapi.domain.user.dto.SexDto
-import dulikkk.livehealthierapi.domain.user.dto.UserInfoDto
 import dulikkk.livehealthierapi.domain.user.dto.exception.UserException
 import dulikkk.livehealthierapi.domain.user.port.outgoing.ActivationTokenCreator
 import dulikkk.livehealthierapi.domain.user.port.outgoing.Encoder

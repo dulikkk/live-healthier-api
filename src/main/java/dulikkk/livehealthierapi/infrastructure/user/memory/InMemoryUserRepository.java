@@ -13,13 +13,13 @@ import static java.util.UUID.randomUUID;
 
 public class InMemoryUserRepository implements UserRepository, UserQueryRepository {
 
-    private  Map<String, UserDto> usersRepo = new ConcurrentHashMap<>();
+    private final Map<String, UserDto> usersRepo = new ConcurrentHashMap<>();
 
     // UserId, Token
-    private  Map<String, String> tokensRepo = new ConcurrentHashMap<>();
+    private final Map<String, String> tokensRepo = new ConcurrentHashMap<>();
 
     @Override
-    public UserDto createUser(UserDto userDto) {
+    public UserDto saveUser(UserDto userDto) {
         UserDto userToSave = UserDto.builder()
                 .username(userDto.getUsername())
                 .email(userDto.getEmail())
