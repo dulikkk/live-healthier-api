@@ -1,5 +1,6 @@
 package dulikkk.livehealthierapi.domain.user
 
+import dulikkk.livehealthierapi.domain.plan.PlanDomainFacade
 import dulikkk.livehealthierapi.domain.user.dto.NewUserCommand
 import dulikkk.livehealthierapi.domain.user.dto.NewUserInfoCommand
 import dulikkk.livehealthierapi.domain.user.dto.SexDto
@@ -15,7 +16,6 @@ import java.time.LocalDateTime
 
 class UserDomainTest extends Specification {
 
-
     private InMemoryUserRepository inMemoryUserRepository = new InMemoryUserRepository()
 
     private Encoder encoder = Mock(Encoder)
@@ -24,8 +24,10 @@ class UserDomainTest extends Specification {
 
     private TokenSender tokenSender = Mock(TokenSender)
 
+    private PlanDomainFacade planDomainFacade = Mock(PlanDomainFacade)
+
     private UserDomainFacade userFacade = new UserDomainConfigurator().userDomainFacade(inMemoryUserRepository, encoder,
-            activationTokenCreator, tokenSender)
+            activationTokenCreator, tokenSender, planDomainFacade)
 
     private NewUserInfoCommand badNewUserInfoCommand = NewUserInfoCommand.builder()
             .sex(SexDto.MALE)

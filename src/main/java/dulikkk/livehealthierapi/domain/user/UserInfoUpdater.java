@@ -16,41 +16,15 @@ class UserInfoUpdater {
     private final UserQueryRepository userQueryRepository;
     private final UserRepository userRepository;
 
-    void updateUserInfo(String userId, NewUserInfoCommand newUserInfoCommand){
+    void updateUserInfo(String userId, NewUserInfoCommand newUserInfoCommand) {
         userValidator.validateUserInfo(newUserInfoCommand);
 
         UserDto userDto = userQueryRepository.findById(userId)
                 .orElseThrow(() -> new CannotFindUserException("Nie ma takiego użytkownika"));
 
-        UserHeightDto currentUserHeightDto = userDto.getUserInfoDto().getUserHeightDto();
-        UserWeightDto currentUserWeightDto = userDto.getUserInfoDto().getUserWeightDto();
+        UserInfoDto newUserInfoDto = updateNewUserInfoDto(userDto, newUserInfoCommand);
 
-        UserHeightDto newUserHeightDto = UserHeightDto.builder()
-                .currentHeightInCm(newUserInfoCommand.getHeightInCm())
-                .lastHeightInCm(currentUserHeightDto.getLastHeightInCm())
-                .initialHeightInCm(currentUserHeightDto.getInitialHeightInCm())
-                .lastUpdateDate(now())
-                .initialDate(currentUserHeightDto.getInitialDate())
-                .build();
-
-        UserWeightDto newUserWeightDto = UserWeightDto.builder()
-                .currentWeightInKg(newUserInfoCommand.getWeightInKg())
-                .lastWeightInKg(currentUserWeightDto.getLastWeightInKg())
-                .initialWeightInKg(currentUserWeightDto.getInitialWeightInKg())
-                .lastUpdateDate(now())
-                .initialDate(currentUserHeightDto.getInitialDate())
-                .build();
-
-        UserInfoDto newUserInfoDto = UserInfoDto.builder()
-                .sex(newUserInfoCommand.getSex())
-                .birthday(newUserInfoCommand.getBirthdate())
-                .userHeightDto(newUserHeightDto)
-                .userWeightDto(newUserWeightDto)
-                .bmi(userCreator.calculateBMI(newUserInfoCommand.getWeightInKg(),
-                        newUserInfoCommand.getHeightInCm()))
-                .build();
-
-        UserDto userToSave = UserDto.builder()
+                UserDto userToSaveWithId = UserDto.builder()
                 .id(userId)
                 .username(userDto.getUsername())
                 .email(userDto.getEmail())
@@ -60,6 +34,43 @@ class UserInfoUpdater {
                 .userInfoDto(newUserInfoDto)
                 .build();
 
-        userRepository.updateUser(userToSave);
+        userRepository.updateUser(userToSaveWithId);
+    }
+
+    private UserInfoDto updateNewUserInfoDto(UserDto userDto, NewUserInfoCommand newUserInfoCommand) {
+        UserHeightDto updatedUserHeightDto = updateUserHeightDto(newUserInfoCommand.getHeightInCm(),
+                userDto.getUserInfoDto().getUserHeightDto());
+
+        UserWeightDto updatedUserWeightDto = updateUserWeightDto(newUserInfoCommand.getWeightInKg(),
+                userDto.getUserInfoDto().getUserWeightDto());
+
+        return UserInfoDto.builder()
+                .sex(newUserInfoCommand.getSex())
+                .birthday(newUserInfoCommand.getBirthdate())
+                .userHeightDto(updatedUserHeightDto)
+                .userWeightDto(updatedUserWeightDto)
+                .bmi(userCreator.calculateBMI(newUserInfoCommand.getWeightInKg(),
+                        newUserInfoCommand.getHeightInCm()))
+                .build();
+    }
+
+    private UserHeightDto updateUserHeightDto(double newHeightInCm, UserHeightDto oldUserHeightDto) {
+        return UserHeightDto.builder()
+                .currentHeightInCm(newHeightInCm)
+                .lastHeightInCm(oldUserHeightDto.getLastHeightInCm())
+                .initialHeightInCm(oldUserHeightDto.getInitialHeightInCm())
+                .lastUpdateDate(now())
+                .initialDate(oldUserHeightDto.getInitialDate())
+                .build();
+    }
+
+    private UserWeightDto updateUserWeightDto(double newWeightInKg, UserWeightDto userWeightDto) {
+        return UserWeightDto.builder()
+                .currentWeightInKg(newWeightInKg)
+                .lastWeightInKg(userWeightDto.getLastWeightInKg())
+                .initialWeightInKg(userWeightDto.getInitialWeightInKg())
+                .lastUpdateDate(now())
+                .initialDate(userWeightDto.getInitialDate())
+                .build();
     }
 }

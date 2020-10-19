@@ -1,5 +1,6 @@
 package dulikkk.livehealthierapi.domain.user;
 
+import dulikkk.livehealthierapi.domain.plan.PlanDomainFacade;
 import dulikkk.livehealthierapi.domain.user.dto.NewUserCommand;
 import dulikkk.livehealthierapi.domain.user.dto.NewUserInfoCommand;
 import dulikkk.livehealthierapi.domain.user.port.outgoing.ActivationTokenCreator;
@@ -15,11 +16,10 @@ public class UserDomainFacade {
     private final UserInfoUpdater userInfoUpdater;
 
     public UserDomainFacade(UserRepository userRepository, UserQueryRepository userQueryRepository, Encoder encoder,
-                            TokenSender tokenSender, ActivationTokenCreator activationTokenCreator) {
+                            TokenSender tokenSender, ActivationTokenCreator activationTokenCreator, PlanDomainFacade planDomainFacade) {
         UserValidator userValidator = new UserValidator(userQueryRepository);
-
         this.userActivator = new UserActivator(tokenSender, activationTokenCreator, userRepository, userQueryRepository);
-        this.userCreator = new UserCreator(userRepository, encoder, userActivator, userValidator);
+        this.userCreator = new UserCreator(userRepository, encoder, userActivator, userValidator, planDomainFacade);
         this.userInfoUpdater = new UserInfoUpdater(userValidator, userCreator, userQueryRepository, userRepository);
     }
 

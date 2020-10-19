@@ -20,8 +20,8 @@ class PlanCreator {
 
     void createPlan(NewPlanCommand newPlanCommand) {
         isThisUserExists(newPlanCommand.getUserId());
-        DifficultyLevelDto userLevel = planLevelCalculator.calculateUserLevelByBmiAndAge(newPlanCommand.getBmi(), newPlanCommand.getAge());
 
+        DifficultyLevelDto userLevel = planLevelCalculator.calculateUserLevelByBmiAndAge(newPlanCommand.getBmi(), newPlanCommand.getAge());
         PlanDto userPlan = createPlanByUserLevel(newPlanCommand.getUserId(), userLevel);
 
         trainingRepository.savePlan(userPlan);

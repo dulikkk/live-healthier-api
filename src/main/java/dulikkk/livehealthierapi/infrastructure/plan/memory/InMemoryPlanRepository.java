@@ -7,6 +7,7 @@ import dulikkk.livehealthierapi.domain.plan.dto.exception.CannotFindPlanExceptio
 import dulikkk.livehealthierapi.domain.plan.dto.exception.PlanException;
 import dulikkk.livehealthierapi.domain.plan.port.outgoing.PlanRepository;
 import dulikkk.livehealthierapi.domain.plan.query.PlanQueryRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.Map;
@@ -16,6 +17,7 @@ import static dulikkk.livehealthierapi.domain.plan.dto.DifficultyLevelDto.*;
 import static dulikkk.livehealthierapi.domain.plan.dto.TrainingTypeDto.*;
 import static java.util.UUID.*;
 
+@Repository
 public class InMemoryPlanRepository implements PlanRepository, PlanQueryRepository {
 
     private final Map<String, TrainingDto> trainingsRepo = loadTrainingsRepo();

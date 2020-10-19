@@ -4,6 +4,7 @@ import dulikkk.livehealthierapi.domain.user.dto.UserDto;
 import dulikkk.livehealthierapi.domain.user.dto.exception.CannotFindUserException;
 import dulikkk.livehealthierapi.domain.user.port.outgoing.UserRepository;
 import dulikkk.livehealthierapi.domain.user.query.UserQueryRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.UUID.randomUUID;
 
+@Repository
 public class InMemoryUserRepository implements UserRepository, UserQueryRepository {
 
     private final Map<String, UserDto> usersRepo = new ConcurrentHashMap<>();
