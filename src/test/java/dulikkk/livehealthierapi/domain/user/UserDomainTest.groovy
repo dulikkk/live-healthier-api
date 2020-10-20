@@ -1,8 +1,9 @@
 package dulikkk.livehealthierapi.domain.user
 
 import dulikkk.livehealthierapi.domain.plan.PlanDomainFacade
-import dulikkk.livehealthierapi.domain.user.dto.NewUserCommand
-import dulikkk.livehealthierapi.domain.user.dto.NewUserInfoCommand
+import dulikkk.livehealthierapi.domain.statistics.StatisticsDomainFacade
+import dulikkk.livehealthierapi.domain.user.dto.command.NewUserCommand
+import dulikkk.livehealthierapi.domain.user.dto.command.NewUserInfoCommand
 import dulikkk.livehealthierapi.domain.user.dto.SexDto
 import dulikkk.livehealthierapi.domain.user.dto.exception.UserException
 import dulikkk.livehealthierapi.domain.user.port.outgoing.ActivationTokenCreator
@@ -26,8 +27,10 @@ class UserDomainTest extends Specification {
 
     private PlanDomainFacade planDomainFacade = Mock(PlanDomainFacade)
 
+    private StatisticsDomainFacade statisticsDomainFacade = Mock(StatisticsDomainFacade)
+
     private UserDomainFacade userFacade = new UserDomainConfigurator().userDomainFacade(inMemoryUserRepository, encoder,
-            activationTokenCreator, tokenSender, planDomainFacade)
+            activationTokenCreator, tokenSender, planDomainFacade, statisticsDomainFacade)
 
     private NewUserInfoCommand badNewUserInfoCommand = NewUserInfoCommand.builder()
             .sex(SexDto.MALE)
@@ -135,23 +138,6 @@ class UserDomainTest extends Specification {
         then: "calculated BMI should equals 21.37"
         inMemoryUserRepository.findById(id).get().getUserInfoDto().getBmi() == 21.37
 
-    }
-
-    def "update user infos"() {
-        given: "registered user and his new weight"
-        String userId = userFacade.addNewUser(newUserCommand)
-        NewUserInfoCommand newUserInfoCommandUpdate = NewUserInfoCommand.builder()
-                .sex(SexDto.MALE)
-                .birthdate(2000)
-                .weightInKg(73)
-                .heightInCm(181)
-                .build()
-
-        when: "trying update user information"
-        userFacade.updateUserInfo(userId, newUserInfoCommandUpdate)
-
-        then: "the system should update user information"
-        inMemoryUserRepository.findById(userId).get().getUserInfoDto().getUserWeightDto().getCurrentWeightInKg() == 73
     }
 
     def "activate user"() {

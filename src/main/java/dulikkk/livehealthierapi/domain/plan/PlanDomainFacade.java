@@ -1,6 +1,6 @@
 package dulikkk.livehealthierapi.domain.plan;
 
-import dulikkk.livehealthierapi.domain.plan.dto.NewPlanCommand;
+import dulikkk.livehealthierapi.domain.plan.dto.command.NewPlanCommand;
 import dulikkk.livehealthierapi.domain.plan.port.outgoing.PlanRepository;
 import dulikkk.livehealthierapi.domain.plan.query.PlanQueryRepository;
 import dulikkk.livehealthierapi.domain.user.query.UserQueryRepository;

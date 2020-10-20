@@ -1,15 +1,13 @@
-package dulikkk.livehealthierapi.domain.user.dto;
+package dulikkk.livehealthierapi.domain.statistics.dto.command;
 
 import lombok.Builder;
 import lombok.Value;
 
 @Builder
 @Value
-public class UserInfoDto {
+public class InitialStatisticsCommand {
 
-    SexDto sex;
-
-    int birthday;
+    String userId;
 
     double heightInCm;
 

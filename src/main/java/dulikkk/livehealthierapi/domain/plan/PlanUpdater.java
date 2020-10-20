@@ -2,6 +2,7 @@ package dulikkk.livehealthierapi.domain.plan;
 
 import dulikkk.livehealthierapi.domain.plan.dto.DifficultyLevelDto;
 import dulikkk.livehealthierapi.domain.plan.dto.PlanDto;
+import dulikkk.livehealthierapi.domain.plan.dto.exception.CannotFindPlanException;
 import dulikkk.livehealthierapi.domain.plan.port.outgoing.PlanRepository;
 import dulikkk.livehealthierapi.domain.plan.query.PlanQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,16 +15,19 @@ class PlanUpdater {
     private final PlanLevelCalculator planLevelCalculator;
     private final PlanCreator planCreator;
 
-    void updateUserPlanByNewBmiOrAge(String userId, double bmi, int age){
+    void updateUserPlanByNewBmiOrAge(String userId, double bmi, int age) {
         DifficultyLevelDto currentUserLevel = planQueryRepository.getPlanByUserId(userId)
+                .orElseThrow(() -> new CannotFindPlanException("Nie można znaleźć planu dla takiego użytkownika"))
                 .getUserLevel();
 
         DifficultyLevelDto userLevelByNewBmiOrAge = planLevelCalculator.calculateUserLevelByBmiAndAge(bmi, age);
 
-        if(userLevelByNewBmiOrAge != currentUserLevel){
+        if (userLevelByNewBmiOrAge != currentUserLevel) {
             PlanDto newUserPlan = planCreator.createPlanByUserLevel(userId, userLevelByNewBmiOrAge);
             PlanDto newUserPlanWithId = PlanDto.builder()
-                    .id(planQueryRepository.getPlanByUserId(userId).getId())
+                    .id(planQueryRepository.getPlanByUserId(userId)
+                            .orElseThrow(() -> new CannotFindPlanException("Nie można znaleźć planu dla takiego użytkownika"))
+                            .getId())
                     .userId(userId)
                     .userLevel(newUserPlan.getUserLevel())
                     .monday(newUserPlan.getMonday())

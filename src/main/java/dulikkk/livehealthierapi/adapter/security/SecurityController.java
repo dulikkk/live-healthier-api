@@ -5,7 +5,7 @@ import dulikkk.livehealthierapi.adapter.incoming.api.ApiResponse;
 import dulikkk.livehealthierapi.adapter.security.securityToken.RefreshTokenUtil;
 import dulikkk.livehealthierapi.adapter.security.securityToken.SecurityTokenPair;
 import dulikkk.livehealthierapi.domain.user.UserDomainFacade;
-import dulikkk.livehealthierapi.domain.user.dto.NewUserCommand;
+import dulikkk.livehealthierapi.domain.user.dto.command.NewUserCommand;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;

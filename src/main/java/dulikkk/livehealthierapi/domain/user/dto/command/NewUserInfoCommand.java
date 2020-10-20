@@ -1,5 +1,6 @@
-package dulikkk.livehealthierapi.domain.user.dto;
+package dulikkk.livehealthierapi.domain.user.dto.command;
 
+import dulikkk.livehealthierapi.domain.user.dto.SexDto;
 import lombok.Builder;
 import lombok.Value;
 

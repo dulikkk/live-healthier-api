@@ -4,8 +4,8 @@ import dulikkk.livehealthierapi.adapter.incoming.api.ApiEndpoint
 import dulikkk.livehealthierapi.adapter.incoming.api.ApiResponse
 import dulikkk.livehealthierapi.adapter.security.SecurityConstant
 import dulikkk.livehealthierapi.adapter.security.authentication.AuthenticationRequest
-import dulikkk.livehealthierapi.domain.user.dto.NewUserCommand
-import dulikkk.livehealthierapi.domain.user.dto.NewUserInfoCommand
+import dulikkk.livehealthierapi.domain.user.dto.command.NewUserCommand
+import dulikkk.livehealthierapi.domain.user.dto.command.NewUserInfoCommand
 import dulikkk.livehealthierapi.domain.user.dto.SexDto
 import dulikkk.livehealthierapi.domain.user.dto.UserDto
 import dulikkk.livehealthierapi.domain.user.dto.UserRoleDto

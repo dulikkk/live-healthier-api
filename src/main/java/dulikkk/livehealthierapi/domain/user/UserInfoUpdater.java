@@ -1,76 +1,115 @@
 package dulikkk.livehealthierapi.domain.user;
 
+import dulikkk.livehealthierapi.domain.statistics.StatisticsDomainFacade;
+import dulikkk.livehealthierapi.domain.statistics.dto.command.UpdateBmiStatisticsCommand;
+import dulikkk.livehealthierapi.domain.statistics.dto.command.UpdateHeightStatisticsCommand;
+import dulikkk.livehealthierapi.domain.statistics.dto.command.UpdateWeightStatisticsCommand;
 import dulikkk.livehealthierapi.domain.user.dto.*;
+import dulikkk.livehealthierapi.domain.user.dto.command.UpdateBmiCommand;
+import dulikkk.livehealthierapi.domain.user.dto.command.UpdateHeightCommand;
+import dulikkk.livehealthierapi.domain.user.dto.command.UpdateWeightCommand;
 import dulikkk.livehealthierapi.domain.user.dto.exception.CannotFindUserException;
 import dulikkk.livehealthierapi.domain.user.port.outgoing.UserRepository;
 import dulikkk.livehealthierapi.domain.user.query.UserQueryRepository;
 import lombok.RequiredArgsConstructor;
 
-import static java.time.LocalDate.now;
-
 @RequiredArgsConstructor
 class UserInfoUpdater {
 
     private final UserValidator userValidator;
-    private final UserCreator userCreator;
     private final UserQueryRepository userQueryRepository;
     private final UserRepository userRepository;
+    private final StatisticsDomainFacade statisticsDomainFacade;
 
-    void updateUserInfo(String userId, NewUserInfoCommand newUserInfoCommand) {
-        userValidator.validateUserInfo(newUserInfoCommand);
+    public void updateBmi(UpdateBmiCommand updateBmiCommand) {
+        userValidator.validateBmi(updateBmiCommand.getNewBmi());
 
-        UserDto userDto = userQueryRepository.findById(userId)
-                .orElseThrow(() -> new CannotFindUserException("Nie ma takiego użytkownika"));
+        UserDto userDto = userQueryRepository.findById(updateBmiCommand.getUserId())
+                .orElseThrow(() -> new CannotFindUserException("Nie znaleziono użytkownika o podanym identyfikatorze"));
 
-        UserInfoDto newUserInfoDto = updateNewUserInfoDto(userDto, newUserInfoCommand);
+        UserInfoDto updatedUserInfo = UserInfoDto.builder()
+                .birthday(userDto.getUserInfoDto().getBirthday())
+                .bmi(updateBmiCommand.getNewBmi())
+                .heightInCm(userDto.getUserInfoDto().getHeightInCm())
+                .weightInKg(userDto.getUserInfoDto().getWeightInKg())
+                .sex(userDto.getUserInfoDto().getSex())
+                .build();
 
-                UserDto userToSaveWithId = UserDto.builder()
-                .id(userId)
+        UserDto updatedUser = UserDto.builder()
+                .id(userDto.getId())
                 .username(userDto.getUsername())
                 .email(userDto.getEmail())
+                .active(userDto.isActive())
                 .password(userDto.getPassword())
                 .roles(userDto.getRoles())
+                .userInfoDto(updatedUserInfo)
+                .build();
+        userRepository.updateUser(updatedUser);
+
+        UpdateBmiStatisticsCommand updateBmiStatisticsCommand = new UpdateBmiStatisticsCommand(
+                updateBmiCommand.getUserId(), userDto.getUserInfoDto().getBmi());
+        statisticsDomainFacade.updateBmiStatistics(updateBmiStatisticsCommand);
+    }
+
+    public void updateHeight(UpdateHeightCommand updateHeightCommand) {
+        userValidator.validateHeightInCm(updateHeightCommand.getNewHeightInCm());
+
+        UserDto userDto = userQueryRepository.findById(updateHeightCommand.getUserId())
+                .orElseThrow(() -> new CannotFindUserException("Nie znaleziono użytkownika o podanym identyfikatorze"));
+
+        UserInfoDto updatedUserInfo = UserInfoDto.builder()
+                .birthday(userDto.getUserInfoDto().getBirthday())
+                .bmi(userDto.getUserInfoDto().getBmi())
+                .heightInCm(updateHeightCommand.getNewHeightInCm())
+                .weightInKg(userDto.getUserInfoDto().getWeightInKg())
+                .sex(userDto.getUserInfoDto().getSex())
+                .build();
+
+        UserDto updatedUser = UserDto.builder()
+                .id(userDto.getId())
+                .username(userDto.getUsername())
+                .email(userDto.getEmail())
                 .active(userDto.isActive())
-                .userInfoDto(newUserInfoDto)
+                .password(userDto.getPassword())
+                .roles(userDto.getRoles())
+                .userInfoDto(updatedUserInfo)
                 .build();
+        userRepository.updateUser(updatedUser);
 
-        userRepository.updateUser(userToSaveWithId);
+        UpdateHeightStatisticsCommand updateHeightStatisticsCommand = new UpdateHeightStatisticsCommand(
+                updateHeightCommand.getUserId(), userDto.getUserInfoDto().getBmi());
+        statisticsDomainFacade.updateHeightStatistics(updateHeightStatisticsCommand);
     }
 
-    private UserInfoDto updateNewUserInfoDto(UserDto userDto, NewUserInfoCommand newUserInfoCommand) {
-        UserHeightDto updatedUserHeightDto = updateUserHeightDto(newUserInfoCommand.getHeightInCm(),
-                userDto.getUserInfoDto().getUserHeightDto());
+    public void updateWeight(UpdateWeightCommand updateWeightCommand) {
+        userValidator.validateWeightInKg(updateWeightCommand.getNewWeightInKg());
 
-        UserWeightDto updatedUserWeightDto = updateUserWeightDto(newUserInfoCommand.getWeightInKg(),
-                userDto.getUserInfoDto().getUserWeightDto());
+        UserDto userDto = userQueryRepository.findById(updateWeightCommand.getUserId())
+                .orElseThrow(() -> new CannotFindUserException("Nie znaleziono użytkownika o podanym identyfikatorze"));
 
-        return UserInfoDto.builder()
-                .sex(newUserInfoCommand.getSex())
-                .birthday(newUserInfoCommand.getBirthdate())
-                .userHeightDto(updatedUserHeightDto)
-                .userWeightDto(updatedUserWeightDto)
-                .bmi(userCreator.calculateBMI(newUserInfoCommand.getWeightInKg(),
-                        newUserInfoCommand.getHeightInCm()))
+        UserInfoDto updatedUserInfo = UserInfoDto.builder()
+                .birthday(userDto.getUserInfoDto().getBirthday())
+                .bmi(userDto.getUserInfoDto().getBmi())
+                .heightInCm(userDto.getUserInfoDto().getHeightInCm())
+                .weightInKg(updateWeightCommand.getNewWeightInKg())
+                .sex(userDto.getUserInfoDto().getSex())
                 .build();
+
+        UserDto updatedUser = UserDto.builder()
+                .id(userDto.getId())
+                .username(userDto.getUsername())
+                .email(userDto.getEmail())
+                .active(userDto.isActive())
+                .password(userDto.getPassword())
+                .roles(userDto.getRoles())
+                .userInfoDto(updatedUserInfo)
+                .build();
+        userRepository.updateUser(updatedUser);
+
+        UpdateWeightStatisticsCommand updateWeightStatisticsCommand = new UpdateWeightStatisticsCommand(
+                updateWeightCommand.getUserId(), userDto.getUserInfoDto().getBmi());
+        statisticsDomainFacade.updateWeightStatistics(updateWeightStatisticsCommand);
     }
 
-    private UserHeightDto updateUserHeightDto(double newHeightInCm, UserHeightDto oldUserHeightDto) {
-        return UserHeightDto.builder()
-                .currentHeightInCm(newHeightInCm)
-                .lastHeightInCm(oldUserHeightDto.getLastHeightInCm())
-                .initialHeightInCm(oldUserHeightDto.getInitialHeightInCm())
-                .lastUpdateDate(now())
-                .initialDate(oldUserHeightDto.getInitialDate())
-                .build();
-    }
 
-    private UserWeightDto updateUserWeightDto(double newWeightInKg, UserWeightDto userWeightDto) {
-        return UserWeightDto.builder()
-                .currentWeightInKg(newWeightInKg)
-                .lastWeightInKg(userWeightDto.getLastWeightInKg())
-                .initialWeightInKg(userWeightDto.getInitialWeightInKg())
-                .lastUpdateDate(now())
-                .initialDate(userWeightDto.getInitialDate())
-                .build();
-    }
 }

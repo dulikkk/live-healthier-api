@@ -1,4 +1,4 @@
-package dulikkk.livehealthierapi.domain.user.dto;
+package dulikkk.livehealthierapi.domain.user.dto.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Value;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static dulikkk.livehealthierapi.domain.plan.dto.DifficultyLevelDto.*;
@@ -179,11 +180,10 @@ public class InMemoryPlanRepository implements PlanRepository, PlanQueryReposito
     }
 
     @Override
-    public PlanDto getPlanByUserId(String userId) {
+    public Optional<PlanDto> getPlanByUserId(String userId) {
         return plansRepo.values()
                 .stream()
                 .filter(planDto -> planDto.getUserId().equals(userId))
-                .findAny()
-                .orElseThrow(() -> new CannotFindPlanException("Nie można znaleźć planu dla tego użytkownika"));
+                .findAny();
     }
 }

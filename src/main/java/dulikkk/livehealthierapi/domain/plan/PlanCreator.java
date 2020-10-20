@@ -1,7 +1,7 @@
 package dulikkk.livehealthierapi.domain.plan;
 
 import dulikkk.livehealthierapi.domain.plan.dto.DifficultyLevelDto;
-import dulikkk.livehealthierapi.domain.plan.dto.NewPlanCommand;
+import dulikkk.livehealthierapi.domain.plan.dto.command.NewPlanCommand;
 import dulikkk.livehealthierapi.domain.plan.dto.PlanDto;
 import dulikkk.livehealthierapi.domain.plan.dto.TrainingDto;
 import dulikkk.livehealthierapi.domain.plan.port.outgoing.PlanRepository;

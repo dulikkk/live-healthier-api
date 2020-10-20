@@ -1,8 +1,12 @@
 package dulikkk.livehealthierapi.domain.user;
 
 import dulikkk.livehealthierapi.domain.plan.PlanDomainFacade;
-import dulikkk.livehealthierapi.domain.plan.dto.NewPlanCommand;
+import dulikkk.livehealthierapi.domain.plan.dto.command.NewPlanCommand;
+import dulikkk.livehealthierapi.domain.statistics.StatisticsDomainFacade;
+import dulikkk.livehealthierapi.domain.statistics.dto.command.InitialStatisticsCommand;
 import dulikkk.livehealthierapi.domain.user.dto.*;
+import dulikkk.livehealthierapi.domain.user.dto.command.NewUserCommand;
+import dulikkk.livehealthierapi.domain.user.dto.command.NewUserInfoCommand;
 import dulikkk.livehealthierapi.domain.user.port.outgoing.Encoder;
 import dulikkk.livehealthierapi.domain.user.port.outgoing.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +16,6 @@ import java.math.MathContext;
 import java.time.Year;
 import java.util.Set;
 
-import static java.time.LocalDate.now;
-
 @RequiredArgsConstructor
 class UserCreator {
 
@@ -22,6 +24,7 @@ class UserCreator {
     private final UserActivator userActivator;
     private final UserValidator userValidator;
     private final PlanDomainFacade planDomainFacade;
+    private final StatisticsDomainFacade statisticsDomainFacade;
 
     String createUser(NewUserCommand newUserCommand) {
         userValidator.validateNewUser(newUserCommand);
@@ -33,6 +36,7 @@ class UserCreator {
         new Thread(() -> userActivator.createAndSendActivationToken(savedUser.getId(), savedUser.getEmail())).start();
 
         createPlanForNewUser(savedUser);
+        initialStatistics(savedUser.getId(), newUserCommand.getNewUserInfoCommand());
 
         return savedUser.getId();
     }
@@ -60,30 +64,23 @@ class UserCreator {
     }
 
     private UserInfoDto createUserInfoDto(NewUserInfoCommand newUserInfoCommand) {
-        UserWeightDto userWeightDto = UserWeightDto.builder()
-                .currentWeightInKg(newUserInfoCommand.getWeightInKg())
-                .initialWeightInKg(newUserInfoCommand.getWeightInKg())
-                .lastWeightInKg(newUserInfoCommand.getWeightInKg())
-                .initialDate(now())
-                .lastUpdateDate(now())
-                .build();
-
-        UserHeightDto userHeightDto = UserHeightDto.builder()
-                .currentHeightInCm(newUserInfoCommand.getHeightInCm())
-                .initialHeightInCm(newUserInfoCommand.getHeightInCm())
-                .lastHeightInCm(newUserInfoCommand.getHeightInCm())
-                .initialDate(now())
-                .lastUpdateDate(now())
-                .build();
-
         return UserInfoDto.builder()
                 .sex(newUserInfoCommand.getSex())
                 .birthday(newUserInfoCommand.getBirthdate())
-                .userHeightDto(userHeightDto)
-                .userWeightDto(userWeightDto)
+                .heightInCm(newUserInfoCommand.getHeightInCm())
+                .weightInKg(newUserInfoCommand.getWeightInKg())
                 .bmi(calculateBMI(newUserInfoCommand.getWeightInKg(),
                         newUserInfoCommand.getHeightInCm()))
                 .build();
+    }
+
+    private void initialStatistics(String userId, NewUserInfoCommand newUserInfoCommand) {
+        InitialStatisticsCommand initialStatisticsCommand = InitialStatisticsCommand.builder()
+                .heightInCm(newUserInfoCommand.getHeightInCm())
+                .weightInKg(newUserInfoCommand.getWeightInKg())
+                .userId(userId)
+                .build();
+        statisticsDomainFacade.initialStatistics(initialStatisticsCommand);
     }
 
     private void createPlanForNewUser(UserDto newUser) {

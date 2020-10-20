@@ -1,8 +1,8 @@
 package dulikkk.livehealthierapi.domain.user;
 
 
-import dulikkk.livehealthierapi.domain.user.dto.NewUserCommand;
-import dulikkk.livehealthierapi.domain.user.dto.NewUserInfoCommand;
+import dulikkk.livehealthierapi.domain.user.dto.command.NewUserCommand;
+import dulikkk.livehealthierapi.domain.user.dto.command.NewUserInfoCommand;
 import dulikkk.livehealthierapi.domain.user.dto.exception.UserException;
 import dulikkk.livehealthierapi.domain.user.query.UserQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,19 +28,28 @@ class UserValidator {
     }
 
     public void validateUserInfo(NewUserInfoCommand newUserInfoCommand) {
-        if(newUserInfoCommand == null){
+        if (newUserInfoCommand == null) {
             throw new UserException("Proszę podać informację o użytkowniku");
         }
-        if (!isTheUserOlderThan5AndUnder100(newUserInfoCommand.getBirthdate())) {
-            throw new UserException("Wiek użytkownika nie może być mniejszy od 5 lat i większy od 100");
-        }
+        validateHeightInCm(newUserInfoCommand.getHeightInCm());
+        validateWeightInKg(newUserInfoCommand.getWeightInKg());
+    }
 
-        if (newUserInfoCommand.getWeightInKg() <= 10 || newUserInfoCommand.getWeightInKg() >= 300) {
-            throw new UserException("Czy to aby napewno twoja waga?");
+    public void validateBmi(double bmi) {
+        if (bmi > 5 && bmi < 50) {
+            throw new UserException("Czy to aby na pewno dobre bmi?");
         }
+    }
 
-        if (newUserInfoCommand.getHeightInCm() <= 70 || newUserInfoCommand.getHeightInCm() >= 230) {
-            throw new UserException("Czy to aby napewno twój wzrost?");
+    public void validateHeightInCm(double heightInCm) {
+        if (heightInCm <= 60 || heightInCm >= 230) {
+            throw new UserException("Czy to aby na pewno twój wzrost?");
+        }
+    }
+
+    public void validateWeightInKg(double weightInKg) {
+        if (weightInKg <= 60 || weightInKg >= 230) {
+            throw new UserException("Czy to aby na pewno twój wzrost?");
         }
     }
 
@@ -75,7 +84,7 @@ class UserValidator {
                 });
     }
 
-    private boolean isTheUserOlderThan5AndUnder100(int birthdate){
+    private boolean isTheUserOlderThan5AndUnder100(int birthdate) {
         return Year.now().getValue() - 100 <= birthdate || Year.now().getValue() - 5 >= birthdate;
     }
 }

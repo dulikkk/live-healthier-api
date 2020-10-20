@@ -1,8 +1,11 @@
 package dulikkk.livehealthierapi.domain.user;
 
 import dulikkk.livehealthierapi.domain.plan.PlanDomainFacade;
-import dulikkk.livehealthierapi.domain.user.dto.NewUserCommand;
-import dulikkk.livehealthierapi.domain.user.dto.NewUserInfoCommand;
+import dulikkk.livehealthierapi.domain.statistics.StatisticsDomainFacade;
+import dulikkk.livehealthierapi.domain.user.dto.command.NewUserCommand;
+import dulikkk.livehealthierapi.domain.user.dto.command.UpdateBmiCommand;
+import dulikkk.livehealthierapi.domain.user.dto.command.UpdateHeightCommand;
+import dulikkk.livehealthierapi.domain.user.dto.command.UpdateWeightCommand;
 import dulikkk.livehealthierapi.domain.user.port.outgoing.ActivationTokenCreator;
 import dulikkk.livehealthierapi.domain.user.port.outgoing.Encoder;
 import dulikkk.livehealthierapi.domain.user.port.outgoing.TokenSender;
@@ -16,11 +19,13 @@ public class UserDomainFacade {
     private final UserInfoUpdater userInfoUpdater;
 
     public UserDomainFacade(UserRepository userRepository, UserQueryRepository userQueryRepository, Encoder encoder,
-                            TokenSender tokenSender, ActivationTokenCreator activationTokenCreator, PlanDomainFacade planDomainFacade) {
+                            TokenSender tokenSender, ActivationTokenCreator activationTokenCreator,
+                            PlanDomainFacade planDomainFacade, StatisticsDomainFacade statisticsDomainFacade) {
         UserValidator userValidator = new UserValidator(userQueryRepository);
         this.userActivator = new UserActivator(tokenSender, activationTokenCreator, userRepository, userQueryRepository);
-        this.userCreator = new UserCreator(userRepository, encoder, userActivator, userValidator, planDomainFacade);
-        this.userInfoUpdater = new UserInfoUpdater(userValidator, userCreator, userQueryRepository, userRepository);
+        this.userCreator = new UserCreator(userRepository, encoder, userActivator, userValidator,
+                planDomainFacade, statisticsDomainFacade);
+        this.userInfoUpdater = new UserInfoUpdater(userValidator, userQueryRepository, userRepository, statisticsDomainFacade);
     }
 
     public String addNewUser(NewUserCommand newUserCommand) {
@@ -31,7 +36,15 @@ public class UserDomainFacade {
         userActivator.validateTokenAndActivateUser(token);
     }
 
-    public void updateUserInfo(String userId, NewUserInfoCommand newUserInfoCommand) {
-        userInfoUpdater.updateUserInfo(userId, newUserInfoCommand);
+    public void updateBmi(UpdateBmiCommand updateBmiCommand) {
+        userInfoUpdater.updateBmi(updateBmiCommand);
+    }
+
+    public void updateHeight(UpdateHeightCommand updateHeightCommand) {
+        userInfoUpdater.updateHeight(updateHeightCommand);
+    }
+
+    public void updateWeight(UpdateWeightCommand updateWeightCommand) {
+        userInfoUpdater.updateWeight(updateWeightCommand);
     }
 }

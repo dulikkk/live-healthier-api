@@ -1,6 +1,6 @@
 package dulikkk.livehealthierapi.domain.plan
 
-import dulikkk.livehealthierapi.domain.plan.dto.NewPlanCommand
+import dulikkk.livehealthierapi.domain.plan.dto.command.NewPlanCommand
 import dulikkk.livehealthierapi.domain.user.dto.UserDto
 import dulikkk.livehealthierapi.infrastructure.plan.memory.InMemoryPlanRepository
 import dulikkk.livehealthierapi.infrastructure.user.memory.InMemoryUserRepository
@@ -29,13 +29,13 @@ class PlanDomainTest extends Specification {
         planDomainFacade.createPlanForUser(newPlanCommand)
 
         then: "the system should calculate A1 level"
-        inMemoryPlanRepository.getPlanByUserId(newPlanCommand.getUserId()).getUserLevel() == A1
+        inMemoryPlanRepository.getPlanByUserId(newPlanCommand.getUserId()).get().getUserLevel() == A1
         String userId = newPlanCommand.getUserId()
-        inMemoryPlanRepository.getPlanByUserId(newPlanCommand.getUserId()).getUserLevel() == A1
-        inMemoryPlanRepository.getPlanByUserId(userId).getTuesday().getTrainingDifficultyDto() == A2
-        inMemoryPlanRepository.getPlanByUserId(userId).getWednesday().getTrainingDifficultyDto() == A1
-        inMemoryPlanRepository.getPlanByUserId(userId).getFriday().getTrainingDifficultyDto() == A1
-        inMemoryPlanRepository.getPlanByUserId(userId).getSaturday().getTrainingDifficultyDto() == A1
+        inMemoryPlanRepository.getPlanByUserId(newPlanCommand.getUserId()).get().getUserLevel() == A1
+        inMemoryPlanRepository.getPlanByUserId(userId).get().getTuesday().getTrainingDifficultyDto() == A2
+        inMemoryPlanRepository.getPlanByUserId(userId).get().getWednesday().getTrainingDifficultyDto() == A1
+        inMemoryPlanRepository.getPlanByUserId(userId).get().getFriday().getTrainingDifficultyDto() == A1
+        inMemoryPlanRepository.getPlanByUserId(userId).get().getSaturday().getTrainingDifficultyDto() == A1
     }
 
     def "calculate level for old user"() {
@@ -46,7 +46,7 @@ class PlanDomainTest extends Specification {
         planDomainFacade.createPlanForUser(newPlanCommandForOldUser)
 
         then: "the system should calculate C2 level"
-        inMemoryPlanRepository.getPlanByUserId(newPlanCommandForOldUser.getUserId()).getUserLevel() == C2
+        inMemoryPlanRepository.getPlanByUserId(newPlanCommandForOldUser.getUserId()).get().getUserLevel() == C2
     }
 
     def "update bmi"() {
@@ -59,11 +59,11 @@ class PlanDomainTest extends Specification {
 
         then: "the system should calculate a new level and update plan by a new level"
         String userId = newPlanCommand.getUserId()
-        inMemoryPlanRepository.getPlanByUserId(newPlanCommand.getUserId()).getUserLevel() == B2
-        inMemoryPlanRepository.getPlanByUserId(userId).getTuesday().getTrainingDifficultyDto() == B1
-        inMemoryPlanRepository.getPlanByUserId(userId).getWednesday().getTrainingDifficultyDto() == B2
-        inMemoryPlanRepository.getPlanByUserId(userId).getFriday().getTrainingDifficultyDto() == C1
-        inMemoryPlanRepository.getPlanByUserId(userId).getSaturday().getTrainingDifficultyDto() == B2
+        inMemoryPlanRepository.getPlanByUserId(newPlanCommand.getUserId()).get().getUserLevel() == B2
+        inMemoryPlanRepository.getPlanByUserId(userId).get().getTuesday().getTrainingDifficultyDto() == B1
+        inMemoryPlanRepository.getPlanByUserId(userId).get().getWednesday().getTrainingDifficultyDto() == B2
+        inMemoryPlanRepository.getPlanByUserId(userId).get().getFriday().getTrainingDifficultyDto() == C1
+        inMemoryPlanRepository.getPlanByUserId(userId).get().getSaturday().getTrainingDifficultyDto() == B2
 
 
     }

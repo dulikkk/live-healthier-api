@@ -1,6 +1,7 @@
 package dulikkk.livehealthierapi.domain.user;
 
 import dulikkk.livehealthierapi.domain.plan.PlanDomainFacade;
+import dulikkk.livehealthierapi.domain.statistics.StatisticsDomainFacade;
 import dulikkk.livehealthierapi.domain.user.port.outgoing.ActivationTokenCreator;
 import dulikkk.livehealthierapi.domain.user.port.outgoing.Encoder;
 import dulikkk.livehealthierapi.domain.user.port.outgoing.TokenSender;
@@ -14,8 +15,8 @@ public class UserDomainConfigurator {
     @Bean
     public UserDomainFacade userDomainFacade(InMemoryUserRepository inMemoryUserRepository, Encoder encoder,
                                              ActivationTokenCreator activationTokenCreator, TokenSender tokenSender,
-                                             PlanDomainFacade planDomainFacade) {
+                                             PlanDomainFacade planDomainFacade, StatisticsDomainFacade statisticsDomainFacade) {
         return new UserDomainFacade(inMemoryUserRepository, inMemoryUserRepository, encoder, tokenSender,
-                activationTokenCreator, planDomainFacade);
+                activationTokenCreator, planDomainFacade, statisticsDomainFacade);
     }
 }

@@ -1,4 +1,4 @@
-package dulikkk.livehealthierapi.domain.user.dto;
+package dulikkk.livehealthierapi.domain.statistics.dto;
 
 import lombok.Builder;
 import lombok.Value;
@@ -7,13 +7,11 @@ import java.time.LocalDate;
 
 @Builder
 @Value
-public class UserWeightDto {
+public class WeightStatisticsDto {
 
     double initialWeightInKg;
 
     double lastWeightInKg;
-
-    double currentWeightInKg;
 
     LocalDate initialDate;
 
