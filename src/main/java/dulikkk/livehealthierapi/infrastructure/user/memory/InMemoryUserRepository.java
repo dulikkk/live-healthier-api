@@ -1,5 +1,6 @@
 package dulikkk.livehealthierapi.infrastructure.user.memory;
 
+import dulikkk.livehealthierapi.adapter.security.securityToken.RefreshTokenRepository;
 import dulikkk.livehealthierapi.domain.user.dto.UserDto;
 import dulikkk.livehealthierapi.domain.user.dto.exception.CannotFindUserException;
 import dulikkk.livehealthierapi.domain.user.port.outgoing.UserRepository;
@@ -13,12 +14,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import static java.util.UUID.randomUUID;
 
 @Repository
-public class InMemoryUserRepository implements UserRepository, UserQueryRepository {
+public class InMemoryUserRepository implements UserRepository, UserQueryRepository, RefreshTokenRepository {
 
     private final Map<String, UserDto> usersRepo = new ConcurrentHashMap<>();
 
     // UserId, Token
     private final Map<String, String> tokensRepo = new ConcurrentHashMap<>();
+
+    // refresh token, username
+    private final Map<String, String> refreshTokens = new ConcurrentHashMap<>();
 
     @Override
     public UserDto saveUser(UserDto userDto) {
@@ -102,5 +106,23 @@ public class InMemoryUserRepository implements UserRepository, UserQueryReposito
         tokensRepo.replace(userId, newToken);
     }
 
+
+    @Override
+    public void saveRefreshToken(String refreshToken, String username) {
+        refreshTokens.put(refreshToken, username);
+    }
+
+    @Override
+    public void deleteRefreshToken(String refreshToken) {
+        refreshTokens.remove(refreshToken);
+    }
+
+    @Override
+    public Optional<UserDto> getUserByRefreshToken(String refreshToken) {
+        return usersRepo.values()
+                .stream()
+                .filter(userDto -> userDto.getUsername().equals(refreshTokens.get(refreshToken)))
+                .findAny();
+    }
 }
 

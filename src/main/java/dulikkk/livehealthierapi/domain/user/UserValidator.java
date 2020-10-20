@@ -28,6 +28,9 @@ class UserValidator {
     }
 
     public void validateUserInfo(NewUserInfoCommand newUserInfoCommand) {
+        if(newUserInfoCommand == null){
+            throw new UserException("Proszę podać informację o użytkowniku");
+        }
         if (!isTheUserOlderThan5AndUnder100(newUserInfoCommand.getBirthdate())) {
             throw new UserException("Wiek użytkownika nie może być mniejszy od 5 lat i większy od 100");
         }

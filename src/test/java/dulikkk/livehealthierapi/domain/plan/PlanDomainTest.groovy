@@ -1,7 +1,5 @@
-package dulikkk.livehealthierapi.domain.user
+package dulikkk.livehealthierapi.domain.plan
 
-import dulikkk.livehealthierapi.domain.plan.PlanDomainConfigurator
-import dulikkk.livehealthierapi.domain.plan.PlanDomainFacade
 import dulikkk.livehealthierapi.domain.plan.dto.NewPlanCommand
 import dulikkk.livehealthierapi.domain.user.dto.UserDto
 import dulikkk.livehealthierapi.infrastructure.plan.memory.InMemoryPlanRepository
