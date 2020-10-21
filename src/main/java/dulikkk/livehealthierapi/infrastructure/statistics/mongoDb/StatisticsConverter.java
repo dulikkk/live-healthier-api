@@ -8,11 +8,11 @@ public class StatisticsConverter {
         return StatisticsDocument.builder()
                 .id(statisticsDto.getId())
                 .userId(statisticsDto.getUserId())
-                .bmiStatisticsDto(statisticsDto.getBmiStatisticsDto())
-                .heightStatisticsDto(statisticsDto.getHeightStatisticsDto())
-                .weightStatisticsDto(statisticsDto.getWeightStatisticsDto())
-                .superChallengeStatisticsDto(statisticsDto.getSuperChallengeStatisticsDto())
-                .trainingStatisticsDto(statisticsDto.getTrainingStatisticsDto())
+                .bmiStatistics(statisticsDto.getBmiStatisticsDto())
+                .heightStatistics(statisticsDto.getHeightStatisticsDto())
+                .weightStatistics(statisticsDto.getWeightStatisticsDto())
+                .superChallengeStatistics(statisticsDto.getSuperChallengeStatisticsDto())
+                .trainingStatistics(statisticsDto.getTrainingStatisticsDto())
                 .build();
     }
 
@@ -20,11 +20,11 @@ public class StatisticsConverter {
         return StatisticsDto.builder()
                 .id(statisticsDocument.getId())
                 .userId(statisticsDocument.getUserId())
-                .bmiStatisticsDto(statisticsDocument.getBmiStatisticsDto())
-                .heightStatisticsDto(statisticsDocument.getHeightStatisticsDto())
-                .weightStatisticsDto(statisticsDocument.getWeightStatisticsDto())
-                .superChallengeStatisticsDto(statisticsDocument.getSuperChallengeStatisticsDto())
-                .trainingStatisticsDto(statisticsDocument.getTrainingStatisticsDto())
+                .bmiStatisticsDto(statisticsDocument.getBmiStatistics())
+                .heightStatisticsDto(statisticsDocument.getHeightStatistics())
+                .weightStatisticsDto(statisticsDocument.getWeightStatistics())
+                .superChallengeStatisticsDto(statisticsDocument.getSuperChallengeStatistics())
+                .trainingStatisticsDto(statisticsDocument.getTrainingStatistics())
                 .build();
     }
 }

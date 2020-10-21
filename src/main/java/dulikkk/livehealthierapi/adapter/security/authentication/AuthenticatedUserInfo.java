@@ -8,7 +8,9 @@ import java.util.Set;
 
 @Builder
 @Value
-class AuthenticatedUserInfo {
+public class AuthenticatedUserInfo {
+
+    String id;
 
     String username;
 

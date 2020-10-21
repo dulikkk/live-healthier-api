@@ -56,7 +56,7 @@ public class MongoDbQueryAndUpdateUtil {
 
     public Query statisticsQueryByUserId(String userId) {
         Query query = new Query(where("id").is(userId));
-        query.fields().include("statistics").exclude("id");
+//        query.fields().include("statistics").exclude("id");
         return query;
     }
 

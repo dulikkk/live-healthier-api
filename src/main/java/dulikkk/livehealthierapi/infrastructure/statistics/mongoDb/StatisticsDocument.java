@@ -3,24 +3,26 @@ package dulikkk.livehealthierapi.infrastructure.statistics.mongoDb;
 import dulikkk.livehealthierapi.domain.statistics.dto.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Value;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Getter
 @Builder
+@Value
 @Document
 public class StatisticsDocument {
 
-    private String id;
+    String id;
 
-    private final String userId;
+    String userId;
 
-    private final HeightStatisticsDto heightStatisticsDto;
+    HeightStatisticsDto heightStatistics;
 
-    private final WeightStatisticsDto weightStatisticsDto;
+    WeightStatisticsDto weightStatistics;
 
-    private final SuperChallengeStatisticsDto superChallengeStatisticsDto;
+    SuperChallengeStatisticsDto superChallengeStatistics;
 
-    private final TrainingStatisticsDto trainingStatisticsDto;
+    TrainingStatisticsDto trainingStatistics;
 
-    private final BmiStatisticsDto bmiStatisticsDto;
+    BmiStatisticsDto bmiStatistics;
 }

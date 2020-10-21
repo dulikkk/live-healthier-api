@@ -85,6 +85,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .orElseThrow(() -> new AuthException("Ojj, coś poszło nie tak. Spróbuj ponownie"));
 
         AuthenticatedUserInfo authenticatedUserInfo = AuthenticatedUserInfo.builder()
+                .id(authUser.getId())
                 .username(authUser.getUsername())
                 .email(authUser.getEmail())
                 .roles(authUser.getRoles())

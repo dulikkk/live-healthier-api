@@ -3,6 +3,7 @@ package dulikkk.livehealthierapi.infrastructure.plan.mongoDb;
 import dulikkk.livehealthierapi.domain.plan.dto.PlanDto;
 import dulikkk.livehealthierapi.domain.plan.query.PlanQueryRepository;
 import dulikkk.livehealthierapi.infrastructure.mongoDb.util.MongoDbQueryAndUpdateUtil;
+import dulikkk.livehealthierapi.infrastructure.user.mongoDb.UserDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,8 @@ class MongoDbPlanQueryRepository implements PlanQueryRepository {
     @Override
     public Optional<PlanDto> getPlanByUserId(String userId) {
         return Optional.ofNullable(mongoTemplate
-                .findOne(mongoDbQueryAndUpdateUtil.planQueryByUserId(userId), PlanDocument.class, "user"))
+                .findOne(mongoDbQueryAndUpdateUtil.statisticsQueryByUserId(userId), UserDocument.class, "user"))
+                .map(UserDocument::getPlan)
                 .map(planConverter::toDto);
     }
 }

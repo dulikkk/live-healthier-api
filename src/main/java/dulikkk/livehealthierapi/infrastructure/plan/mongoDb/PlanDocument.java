@@ -3,33 +3,33 @@ package dulikkk.livehealthierapi.infrastructure.plan.mongoDb;
 import dulikkk.livehealthierapi.domain.plan.dto.DifficultyLevelDto;
 import dulikkk.livehealthierapi.domain.plan.dto.TrainingDto;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
 @Builder
-@Document()
+@Value
+@Document
 public class PlanDocument {
 
     @Id
-    private String id;
+    String id;
 
-    private final String userId;
+    String userId;
 
-    private final DifficultyLevelDto userLevel;
+    DifficultyLevelDto userLevel;
 
-    private final TrainingDto monday;
+    TrainingDto monday;
 
-    private final TrainingDto tuesday;
+    TrainingDto tuesday;
 
-    private final TrainingDto wednesday;
+    TrainingDto wednesday;
 
-    private final TrainingDto thursday;
+    TrainingDto thursday;
 
-    private final TrainingDto friday;
+    TrainingDto friday;
 
-    private final TrainingDto saturday;
+    TrainingDto saturday;
 
-    private final TrainingDto sunday;
+    TrainingDto sunday;
 }
