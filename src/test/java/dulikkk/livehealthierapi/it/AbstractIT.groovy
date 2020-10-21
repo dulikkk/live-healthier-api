@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.HttpHeaders
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import spock.lang.Specification
@@ -13,6 +14,9 @@ class AbstractIT extends Specification {
 
     @Autowired
     protected TestRestTemplate testRestTemplate
+
+    @Autowired
+    protected MongoTemplate mongoTemplate
 
     @LocalServerPort
     protected int randomServerPort

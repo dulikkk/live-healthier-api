@@ -3,11 +3,9 @@ package dulikkk.livehealthierapi.infrastructure.plan.memory;
 import dulikkk.livehealthierapi.domain.plan.dto.DifficultyLevelDto;
 import dulikkk.livehealthierapi.domain.plan.dto.PlanDto;
 import dulikkk.livehealthierapi.domain.plan.dto.TrainingDto;
-import dulikkk.livehealthierapi.domain.plan.dto.exception.CannotFindPlanException;
 import dulikkk.livehealthierapi.domain.plan.dto.exception.PlanException;
 import dulikkk.livehealthierapi.domain.plan.port.outgoing.PlanRepository;
 import dulikkk.livehealthierapi.domain.plan.query.PlanQueryRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.Map;
@@ -18,7 +16,6 @@ import static dulikkk.livehealthierapi.domain.plan.dto.DifficultyLevelDto.*;
 import static dulikkk.livehealthierapi.domain.plan.dto.TrainingTypeDto.*;
 import static java.util.UUID.*;
 
-@Repository
 public class InMemoryPlanRepository implements PlanRepository, PlanQueryRepository {
 
     private final Map<String, TrainingDto> trainingsRepo = loadTrainingsRepo();
@@ -154,7 +151,7 @@ public class InMemoryPlanRepository implements PlanRepository, PlanQueryReposito
                 .stream()
                 .filter(trainingDto -> trainingDto.getTrainingTypeDto() == BREAK)
                 .findAny()
-                .orElseThrow(() -> new PlanException("Ups, nie dnia wolnego"));
+                .orElseThrow(() -> new PlanException("Ups, nie znaleziono wolnego dnia"));
     }
 
     @Override

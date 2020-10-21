@@ -11,10 +11,13 @@ import dulikkk.livehealthierapi.domain.user.dto.UserDto
 import dulikkk.livehealthierapi.domain.user.dto.UserRoleDto
 import dulikkk.livehealthierapi.domain.user.port.outgoing.Encoder
 import dulikkk.livehealthierapi.domain.user.port.outgoing.UserRepository
+import dulikkk.livehealthierapi.infrastructure.user.mongoDb.UserDocument
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 
+import static org.springframework.data.mongodb.core.query.Criteria.where
 
 
 class SecurityIT extends AbstractIT {
@@ -40,7 +43,7 @@ class SecurityIT extends AbstractIT {
             .build()
 
     def setup() {
-        UserDto userDto = UserDto.builder()
+        UserDocument userDocument = UserDocument.builder()
                 .username(username)
                 .email("Kub4k1@gmail.com")
                 .password(encoder.encode(password))
@@ -48,7 +51,12 @@ class SecurityIT extends AbstractIT {
                 .roles(Set.of(UserRoleDto.USER))
                 .build()
 
-        userRepository.saveUser(userDto)
+        mongoTemplate.insert(userDocument)
+    }
+
+    def cleanup() {
+        Query removeQuery = new Query(where("username").is(username))
+        mongoTemplate.remove(removeQuery, UserDocument.class)
     }
 
     def "sign up with good parameters"() {
@@ -61,6 +69,7 @@ class SecurityIT extends AbstractIT {
 
         then: "the system should return 201"
         result.getStatusCodeValue() == 201
+
     }
 
     def "sign up with bad parameters"() {
@@ -96,7 +105,7 @@ class SecurityIT extends AbstractIT {
         when: "trying to authenticate user with bad credentials"
         def result = testRestTemplate.postForEntity(baseUrl + ApiEndpoint.SIGN_IN, badAuthenticationRequest, String.class)
 
-        then: "the system should not authenticate and return 401 status"
+        then: "the system should not authenticate user and return 401 status"
         result.getStatusCodeValue() == 401
 
         result.getHeaders().get("Set-Cookie") == null

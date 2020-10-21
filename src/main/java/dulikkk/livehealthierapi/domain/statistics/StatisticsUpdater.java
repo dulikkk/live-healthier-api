@@ -26,19 +26,19 @@ class StatisticsUpdater {
         int dayOfMonth = localDate.getDayOfMonth();
 
         if (dayOfMonth == 1) {
-            statisticsRepository.clearMonthStatistics();
+            clearMonthStatistics();
         }
 
         switch (dayOfWeek) {
             case MONDAY: {
-                statisticsRepository.clearWeeksStatistics();
+                clearWeekStatistics();
             }
             break;
             case TUESDAY:
             case WEDNESDAY:
             case FRIDAY:
             case SATURDAY: {
-                statisticsRepository.incrementDaysOfTrainingAndSuperChallenge();
+                incrementDaysOfTrainingAndSuperChallenge();
             }
         }
     }
@@ -68,7 +68,7 @@ class StatisticsUpdater {
         statisticsRepository.updateStatistics(newStatisticsDtoToSave);
     }
 
-    void updateHeightStatistics(UpdateHeightStatisticsCommand updateHeightStatisticsCommand){
+    void updateHeightStatistics(UpdateHeightStatisticsCommand updateHeightStatisticsCommand) {
         StatisticsDto statisticsDto = statisticsQueryRepository
                 .getStatisticsByUserId(updateHeightStatisticsCommand.getUserId())
                 .orElseThrow(() -> new CannotFindStatisticsException("Nie można znaleźć statystyk dla tego użytkownika"));
@@ -93,7 +93,7 @@ class StatisticsUpdater {
         statisticsRepository.updateStatistics(newStatisticsDtoToSave);
     }
 
-    void updateBmiStatistics(UpdateBmiStatisticsCommand updateBmiStatisticsCommand){
+    void updateBmiStatistics(UpdateBmiStatisticsCommand updateBmiStatisticsCommand) {
         StatisticsDto statisticsDto = statisticsQueryRepository
                 .getStatisticsByUserId(updateBmiStatisticsCommand.getUserId())
                 .orElseThrow(() -> new CannotFindStatisticsException("Nie można znaleźć statystyk dla tego użytkownika"));
@@ -116,6 +116,123 @@ class StatisticsUpdater {
                 .build();
 
         statisticsRepository.updateStatistics(newStatisticsDtoToSave);
+    }
+
+    private void clearMonthStatistics() {
+        statisticsRepository.getAllStatistics()
+                .forEach(this::clearMonthStatisticsForSpecificStatisticsDto);
+    }
+
+    private void clearMonthStatisticsForSpecificStatisticsDto(StatisticsDto statisticsDto) {
+        TrainingStatisticsDto oldTrainingStatisticsDto = statisticsDto.getTrainingStatisticsDto();
+        TrainingStatisticsDto trainingStatisticsDto = TrainingStatisticsDto.builder()
+                .doneTrainingsThisWeek(oldTrainingStatisticsDto.getDoneTrainingsThisWeek())
+                .allTrainingsThisWeek(oldTrainingStatisticsDto.getAllTrainingsThisWeek())
+                .doneTrainingsThisMonth(0)
+                .allTrainingsThisMonth(0)
+                .doneAllTrainings(oldTrainingStatisticsDto.getDoneAllTrainings())
+                .allTrainings(oldTrainingStatisticsDto.getAllTrainings())
+                .build();
+
+        SuperChallengeStatisticsDto oldSuperChallengeStatisticsDto = statisticsDto.getSuperChallengeStatisticsDto();
+        SuperChallengeStatisticsDto superChallengeStatisticsDto = SuperChallengeStatisticsDto.builder()
+                .allSuperChallengesThisWeek(oldSuperChallengeStatisticsDto.getAllSuperChallenges())
+                .doneSuperChallengesThisWeek(oldSuperChallengeStatisticsDto.getDoneSuperChallengesThisWeek())
+                .allSuperChallengesThisMonth(0)
+                .doneSuperChallengesThisMonth(0)
+                .doneAllSuperChallenges(oldSuperChallengeStatisticsDto.getDoneAllSuperChallenges())
+                .allSuperChallenges(oldSuperChallengeStatisticsDto.getAllSuperChallenges())
+                .build();
+
+        StatisticsDto updatedStatistics = StatisticsDto.builder()
+                .id(statisticsDto.getId())
+                .userId(statisticsDto.getUserId())
+                .bmiStatisticsDto(statisticsDto.getBmiStatisticsDto())
+                .heightStatisticsDto(statisticsDto.getHeightStatisticsDto())
+                .weightStatisticsDto(statisticsDto.getWeightStatisticsDto())
+                .trainingStatisticsDto(trainingStatisticsDto)
+                .superChallengeStatisticsDto(superChallengeStatisticsDto)
+                .build();
+
+        statisticsRepository.updateStatistics(updatedStatistics);
+    }
+
+    private void clearWeekStatistics() {
+        statisticsRepository.getAllStatistics()
+                .forEach(this::clearWeekStatisticsForSpecificStatisticsDto);
+    }
+
+    private void clearWeekStatisticsForSpecificStatisticsDto(StatisticsDto statisticsDto) {
+        TrainingStatisticsDto oldTrainingStatisticsDto = statisticsDto.getTrainingStatisticsDto();
+        TrainingStatisticsDto trainingStatisticsDto = TrainingStatisticsDto.builder()
+                .doneTrainingsThisWeek(0)
+                .allTrainingsThisWeek(0)
+                .doneTrainingsThisMonth(oldTrainingStatisticsDto.getDoneTrainingsThisMonth())
+                .allTrainingsThisMonth(oldTrainingStatisticsDto.getAllTrainingsThisMonth())
+                .doneAllTrainings(oldTrainingStatisticsDto.getDoneAllTrainings())
+                .allTrainings(oldTrainingStatisticsDto.getAllTrainings())
+                .build();
+
+        SuperChallengeStatisticsDto oldSuperChallengeStatisticsDto = statisticsDto.getSuperChallengeStatisticsDto();
+        SuperChallengeStatisticsDto superChallengeStatisticsDto = SuperChallengeStatisticsDto.builder()
+                .allSuperChallengesThisWeek(0)
+                .doneSuperChallengesThisWeek(0)
+                .allSuperChallengesThisMonth(oldSuperChallengeStatisticsDto.getAllSuperChallengesThisMonth())
+                .doneSuperChallengesThisMonth(oldSuperChallengeStatisticsDto.getDoneSuperChallengesThisMonth())
+                .doneAllSuperChallenges(oldSuperChallengeStatisticsDto.getDoneAllSuperChallenges())
+                .allSuperChallenges(oldSuperChallengeStatisticsDto.getAllSuperChallenges())
+                .build();
+
+        StatisticsDto updatedStatistics = StatisticsDto.builder()
+                .id(statisticsDto.getId())
+                .userId(statisticsDto.getUserId())
+                .bmiStatisticsDto(statisticsDto.getBmiStatisticsDto())
+                .heightStatisticsDto(statisticsDto.getHeightStatisticsDto())
+                .weightStatisticsDto(statisticsDto.getWeightStatisticsDto())
+                .trainingStatisticsDto(trainingStatisticsDto)
+                .superChallengeStatisticsDto(superChallengeStatisticsDto)
+                .build();
+
+        statisticsRepository.updateStatistics(updatedStatistics);
+    }
+
+    private void incrementDaysOfTrainingAndSuperChallenge() {
+        statisticsRepository.getAllStatistics()
+                .forEach(this::incrementDaysOfTrainingAndSuperChallengeForSpecificStatisticsDto);
+    }
+
+    private void incrementDaysOfTrainingAndSuperChallengeForSpecificStatisticsDto(StatisticsDto statisticsDto) {
+        TrainingStatisticsDto oldTrainingStatisticsDto = statisticsDto.getTrainingStatisticsDto();
+        TrainingStatisticsDto trainingStatisticsDto = TrainingStatisticsDto.builder()
+                .doneTrainingsThisWeek(oldTrainingStatisticsDto.getDoneTrainingsThisWeek())
+                .allTrainingsThisWeek(oldTrainingStatisticsDto.getAllTrainingsThisWeek() + 1)
+                .doneTrainingsThisMonth(oldTrainingStatisticsDto.getDoneTrainingsThisMonth())
+                .allTrainingsThisMonth(oldTrainingStatisticsDto.getAllTrainingsThisMonth() + 1)
+                .doneAllTrainings(oldTrainingStatisticsDto.getDoneAllTrainings())
+                .allTrainings(oldTrainingStatisticsDto.getAllTrainings() + 1)
+                .build();
+
+        SuperChallengeStatisticsDto oldSuperChallengeStatisticsDto = statisticsDto.getSuperChallengeStatisticsDto();
+        SuperChallengeStatisticsDto superChallengeStatisticsDto = SuperChallengeStatisticsDto.builder()
+                .allSuperChallengesThisWeek(oldSuperChallengeStatisticsDto.getAllSuperChallengesThisWeek() + 1)
+                .doneSuperChallengesThisWeek(oldSuperChallengeStatisticsDto.getDoneSuperChallengesThisWeek())
+                .allSuperChallengesThisMonth(oldSuperChallengeStatisticsDto.getAllSuperChallengesThisMonth() + 1)
+                .doneSuperChallengesThisMonth(oldSuperChallengeStatisticsDto.getDoneSuperChallengesThisMonth())
+                .allSuperChallenges(oldSuperChallengeStatisticsDto.getAllSuperChallenges() + 1)
+                .doneAllSuperChallenges(oldSuperChallengeStatisticsDto.getDoneAllSuperChallenges())
+                .build();
+
+        StatisticsDto updatedStatistics = StatisticsDto.builder()
+                .id(statisticsDto.getId())
+                .userId(statisticsDto.getUserId())
+                .bmiStatisticsDto(statisticsDto.getBmiStatisticsDto())
+                .heightStatisticsDto(statisticsDto.getHeightStatisticsDto())
+                .weightStatisticsDto(statisticsDto.getWeightStatisticsDto())
+                .trainingStatisticsDto(trainingStatisticsDto)
+                .superChallengeStatisticsDto(superChallengeStatisticsDto)
+                .build();
+
+        statisticsRepository.updateStatistics(updatedStatistics);
     }
 
 }

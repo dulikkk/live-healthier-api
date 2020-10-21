@@ -31,6 +31,9 @@ class UserValidator {
         if (newUserInfoCommand == null) {
             throw new UserException("Proszę podać informację o użytkowniku");
         }
+        if(!isTheUserOlderThan5AndUnder100(newUserInfoCommand.getBirthdate())){
+            throw new UserException("Czy to aby na pewno twój wiek?");
+        }
         validateHeightInCm(newUserInfoCommand.getHeightInCm());
         validateWeightInKg(newUserInfoCommand.getWeightInKg());
     }
@@ -48,7 +51,7 @@ class UserValidator {
     }
 
     public void validateWeightInKg(double weightInKg) {
-        if (weightInKg <= 60 || weightInKg >= 230) {
+        if (weightInKg <= 20 || weightInKg >= 250) {
             throw new UserException("Czy to aby na pewno twój wzrost?");
         }
     }

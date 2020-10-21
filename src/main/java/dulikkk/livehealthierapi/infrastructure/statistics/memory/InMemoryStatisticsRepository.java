@@ -3,15 +3,14 @@ package dulikkk.livehealthierapi.infrastructure.statistics.memory;
 import dulikkk.livehealthierapi.domain.statistics.dto.StatisticsDto;
 import dulikkk.livehealthierapi.domain.statistics.port.outgoing.StatisticsRepository;
 import dulikkk.livehealthierapi.domain.statistics.query.StatisticsQueryRepository;
-import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.UUID.randomUUID;
 
-@Repository
 public class InMemoryStatisticsRepository implements StatisticsRepository, StatisticsQueryRepository {
 
     private final Map<String, StatisticsDto> statisticsRepo = new ConcurrentHashMap<>();
@@ -37,18 +36,8 @@ public class InMemoryStatisticsRepository implements StatisticsRepository, Stati
     }
 
     @Override
-    public void incrementDaysOfTrainingAndSuperChallenge() {
-
-    }
-
-    @Override
-    public void clearMonthStatistics() {
-
-    }
-
-    @Override
-    public void clearWeeksStatistics() {
-
+    public List<StatisticsDto> getAllStatistics() {
+        return null;
     }
 
     @Override
