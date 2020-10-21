@@ -1,7 +1,9 @@
 package dulikkk.livehealthierapi.adapter.incoming.api;
 
 import dulikkk.livehealthierapi.adapter.security.AuthException;
+import dulikkk.livehealthierapi.domain.plan.dto.exception.CannotFindPlanException;
 import dulikkk.livehealthierapi.domain.plan.dto.exception.PlanException;
+import dulikkk.livehealthierapi.domain.statistics.dto.exception.CannotFindStatisticsException;
 import dulikkk.livehealthierapi.domain.user.dto.exception.CannotFindUserException;
 import dulikkk.livehealthierapi.domain.user.dto.exception.CannotSendTokenException;
 import dulikkk.livehealthierapi.domain.user.dto.exception.UserException;
@@ -54,5 +56,35 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 .timestamp(now())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
+    }
+
+    @ExceptionHandler(PlanException.class)
+    public ResponseEntity<ApiResponse> planException(PlanException e) {
+        ApiResponse apiResponse = ApiResponse.builder()
+                .content(e.getMessage())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .timestamp(now())
+                .build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
+    }
+
+    @ExceptionHandler(CannotFindPlanException.class)
+    public ResponseEntity<ApiResponse> cannotFindPlanException(CannotFindPlanException e) {
+        ApiResponse apiResponse = ApiResponse.builder()
+                .content(e.getMessage())
+                .status(HttpStatus.NOT_FOUND.value())
+                .timestamp(now())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
+    }
+
+    @ExceptionHandler(CannotFindStatisticsException.class)
+    public ResponseEntity<ApiResponse> cannotFindStatisticsException(CannotFindStatisticsException e) {
+        ApiResponse apiResponse = ApiResponse.builder()
+                .content(e.getMessage())
+                .status(HttpStatus.NOT_FOUND.value())
+                .timestamp(now())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
     }
 }
