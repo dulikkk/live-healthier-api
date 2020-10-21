@@ -3,7 +3,6 @@ package dulikkk.livehealthierapi.domain.user;
 import dulikkk.livehealthierapi.domain.plan.PlanDomainFacade;
 import dulikkk.livehealthierapi.domain.statistics.StatisticsDomainFacade;
 import dulikkk.livehealthierapi.domain.user.dto.command.NewUserCommand;
-import dulikkk.livehealthierapi.domain.user.dto.command.UpdateBmiCommand;
 import dulikkk.livehealthierapi.domain.user.dto.command.UpdateHeightCommand;
 import dulikkk.livehealthierapi.domain.user.dto.command.UpdateWeightCommand;
 import dulikkk.livehealthierapi.domain.user.port.outgoing.ActivationTokenCreator;
@@ -22,10 +21,12 @@ public class UserDomainFacade {
                             TokenSender tokenSender, ActivationTokenCreator activationTokenCreator,
                             PlanDomainFacade planDomainFacade, StatisticsDomainFacade statisticsDomainFacade) {
         UserValidator userValidator = new UserValidator(userQueryRepository);
+        BMICalculator bmiCalculator = new BMICalculator();
         this.userActivator = new UserActivator(tokenSender, activationTokenCreator, userRepository, userQueryRepository);
         this.userCreator = new UserCreator(userRepository, encoder, userActivator, userValidator,
-                planDomainFacade, statisticsDomainFacade);
-        this.userInfoUpdater = new UserInfoUpdater(userValidator, userQueryRepository, userRepository, statisticsDomainFacade);
+                planDomainFacade, statisticsDomainFacade, bmiCalculator);
+        this.userInfoUpdater = new UserInfoUpdater(userValidator, userQueryRepository, userRepository,
+                statisticsDomainFacade, planDomainFacade, bmiCalculator);
     }
 
     public String addNewUser(NewUserCommand newUserCommand) {
@@ -34,10 +35,6 @@ public class UserDomainFacade {
 
     public void activateUser(String token) {
         userActivator.validateTokenAndActivateUser(token);
-    }
-
-    public void updateBmi(UpdateBmiCommand updateBmiCommand) {
-        userInfoUpdater.updateBmi(updateBmiCommand);
     }
 
     public void updateHeight(UpdateHeightCommand updateHeightCommand) {

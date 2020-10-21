@@ -39,7 +39,7 @@ class UserValidator {
     }
 
     public void validateBmi(double bmi) {
-        if (bmi > 5 && bmi < 50) {
+        if (bmi < 5 || bmi > 50) {
             throw new UserException("Czy to aby na pewno dobre bmi?");
         }
     }

@@ -93,7 +93,8 @@ public class MongoDbQueryAndUpdateUtil {
                 .set("refreshToken", userDocument.getRefreshToken())
                 .set("password", userDocument.getPassword())
                 .set("roles", userDocument.getRoles())
-                .set("active", userDocument.isActive());
+                .set("active", userDocument.isActive())
+                .set("userInfo", userDocument.getInfo());
     }
 
     // trainings

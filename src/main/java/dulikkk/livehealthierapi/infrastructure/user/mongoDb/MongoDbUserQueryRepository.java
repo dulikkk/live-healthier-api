@@ -33,8 +33,9 @@ class MongoDbUserQueryRepository implements UserQueryRepository {
 
     @Override
     public Optional<UserDto> findById(String id) {
-        return Optional.ofNullable(mongoTemplate.findById(id, UserDocument.class))
+        var e = Optional.ofNullable(mongoTemplate.findById(id, UserDocument.class))
                 .map(userConverter::toDto);
+        return e;
     }
 
     @SuppressWarnings("ConstantConditions")

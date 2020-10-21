@@ -1,6 +1,7 @@
 package dulikkk.livehealthierapi.adapter.incoming.api;
 
 import dulikkk.livehealthierapi.adapter.security.AuthException;
+import dulikkk.livehealthierapi.domain.plan.dto.exception.PlanException;
 import dulikkk.livehealthierapi.domain.user.dto.exception.CannotFindUserException;
 import dulikkk.livehealthierapi.domain.user.dto.exception.CannotSendTokenException;
 import dulikkk.livehealthierapi.domain.user.dto.exception.UserException;

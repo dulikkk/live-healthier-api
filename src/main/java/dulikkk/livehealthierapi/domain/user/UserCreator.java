@@ -25,6 +25,7 @@ class UserCreator {
     private final UserValidator userValidator;
     private final PlanDomainFacade planDomainFacade;
     private final StatisticsDomainFacade statisticsDomainFacade;
+    private final BMICalculator bmiCalculator;
 
     String createUser(NewUserCommand newUserCommand) {
         userValidator.validateNewUser(newUserCommand);
@@ -36,18 +37,10 @@ class UserCreator {
         new Thread(() -> userActivator.createAndSendActivationToken(savedUser.getId(), savedUser.getEmail())).start();
 
         createPlanForNewUser(savedUser);
-        initialStatistics(savedUser.getId(), newUserCommand.getNewUserInfoCommand());
+        initialStatistics(savedUser.getId(), newUserCommand.getNewUserInfoCommand(),
+                newUserDtoToSave.getUserInfoDto().getBmi());
 
         return savedUser.getId();
-    }
-
-    public double calculateBMI(double weightInKg, double heightInCm) {
-        BigDecimal weightBigDecimal = BigDecimal.valueOf(weightInKg);
-        BigDecimal heightInMBigDecimal = BigDecimal.valueOf(heightInCm / 100);
-
-        // weightInKg / (heightInM * heightInM)
-        return weightBigDecimal.divide(heightInMBigDecimal.multiply(heightInMBigDecimal), new MathContext(4))
-                .doubleValue();
     }
 
     private UserDto encodePasswordAndCreateNewUserDto(NewUserCommand newUserCommand) {
@@ -69,15 +62,16 @@ class UserCreator {
                 .birthday(newUserInfoCommand.getBirthdate())
                 .heightInCm(newUserInfoCommand.getHeightInCm())
                 .weightInKg(newUserInfoCommand.getWeightInKg())
-                .bmi(calculateBMI(newUserInfoCommand.getWeightInKg(),
+                .bmi(bmiCalculator.calculateBMI(newUserInfoCommand.getWeightInKg(),
                         newUserInfoCommand.getHeightInCm()))
                 .build();
     }
 
-    private void initialStatistics(String userId, NewUserInfoCommand newUserInfoCommand) {
+    private void initialStatistics(String userId, NewUserInfoCommand newUserInfoCommand, double bmi) {
         InitialStatisticsCommand initialStatisticsCommand = InitialStatisticsCommand.builder()
                 .heightInCm(newUserInfoCommand.getHeightInCm())
                 .weightInKg(newUserInfoCommand.getWeightInKg())
+                .bmi(bmi)
                 .userId(userId)
                 .build();
         statisticsDomainFacade.initialStatistics(initialStatisticsCommand);
