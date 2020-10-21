@@ -118,6 +118,62 @@ class StatisticsUpdater {
         statisticsRepository.updateStatistics(newStatisticsDtoToSave);
     }
 
+    void doneTraining(String userId) {
+        StatisticsDto statisticsDto = statisticsQueryRepository
+                .getStatisticsByUserId(userId)
+                .orElseThrow(() -> new CannotFindStatisticsException("Nie można znaleźć statystyk dla tego użytkownika"));
+
+        TrainingStatisticsDto oldTrainingStatisticsDto = statisticsDto.getTrainingStatisticsDto();
+        TrainingStatisticsDto trainingStatisticsDto = TrainingStatisticsDto.builder()
+                .doneTrainingsThisWeek(oldTrainingStatisticsDto.getDoneTrainingsThisWeek() + 1)
+                .allTrainingsThisWeek(oldTrainingStatisticsDto.getAllTrainingsThisWeek())
+                .doneTrainingsThisMonth(oldTrainingStatisticsDto.getDoneTrainingsThisMonth() + 1)
+                .allTrainingsThisMonth(oldTrainingStatisticsDto.getAllTrainingsThisMonth())
+                .doneAllTrainings(oldTrainingStatisticsDto.getDoneAllTrainings() + 1)
+                .allTrainings(oldTrainingStatisticsDto.getAllTrainings())
+                .build();
+
+        StatisticsDto updatedStatistics = StatisticsDto.builder()
+                .id(statisticsDto.getId())
+                .userId(statisticsDto.getUserId())
+                .bmiStatisticsDto(statisticsDto.getBmiStatisticsDto())
+                .heightStatisticsDto(statisticsDto.getHeightStatisticsDto())
+                .weightStatisticsDto(statisticsDto.getWeightStatisticsDto())
+                .trainingStatisticsDto(trainingStatisticsDto)
+                .superChallengeStatisticsDto(statisticsDto.getSuperChallengeStatisticsDto())
+                .build();
+
+        statisticsRepository.updateStatistics(updatedStatistics);
+    }
+
+    void doneSuperChallenge(String userId) {
+        StatisticsDto statisticsDto = statisticsQueryRepository
+                .getStatisticsByUserId(userId)
+                .orElseThrow(() -> new CannotFindStatisticsException("Nie można znaleźć statystyk dla tego użytkownika"));
+
+        SuperChallengeStatisticsDto oldSuperChallengeStatisticsDto = statisticsDto.getSuperChallengeStatisticsDto();
+        SuperChallengeStatisticsDto superChallengeStatisticsDto = SuperChallengeStatisticsDto.builder()
+                .allSuperChallengesThisWeek(oldSuperChallengeStatisticsDto.getAllSuperChallenges())
+                .doneSuperChallengesThisWeek(oldSuperChallengeStatisticsDto.getDoneSuperChallengesThisWeek() + 1)
+                .allSuperChallengesThisMonth(oldSuperChallengeStatisticsDto.getAllSuperChallengesThisMonth())
+                .doneSuperChallengesThisMonth(oldSuperChallengeStatisticsDto.getDoneSuperChallengesThisMonth() + 1)
+                .doneAllSuperChallenges(oldSuperChallengeStatisticsDto.getDoneAllSuperChallenges() + 1)
+                .allSuperChallenges(oldSuperChallengeStatisticsDto.getAllSuperChallenges())
+                .build();
+
+        StatisticsDto updatedStatistics = StatisticsDto.builder()
+                .id(statisticsDto.getId())
+                .userId(statisticsDto.getUserId())
+                .bmiStatisticsDto(statisticsDto.getBmiStatisticsDto())
+                .heightStatisticsDto(statisticsDto.getHeightStatisticsDto())
+                .weightStatisticsDto(statisticsDto.getWeightStatisticsDto())
+                .trainingStatisticsDto(statisticsDto.getTrainingStatisticsDto())
+                .superChallengeStatisticsDto(superChallengeStatisticsDto)
+                .build();
+
+        statisticsRepository.updateStatistics(updatedStatistics);
+    }
+
     private void clearMonthStatistics() {
         statisticsRepository.getAllStatistics()
                 .forEach(this::clearMonthStatisticsForSpecificStatisticsDto);
@@ -154,6 +210,7 @@ class StatisticsUpdater {
                 .superChallengeStatisticsDto(superChallengeStatisticsDto)
                 .build();
 
+        // TODO potential bottleneck
         statisticsRepository.updateStatistics(updatedStatistics);
     }
 
@@ -193,6 +250,7 @@ class StatisticsUpdater {
                 .superChallengeStatisticsDto(superChallengeStatisticsDto)
                 .build();
 
+        // TODO potential bottleneck
         statisticsRepository.updateStatistics(updatedStatistics);
     }
 
@@ -232,6 +290,7 @@ class StatisticsUpdater {
                 .superChallengeStatisticsDto(superChallengeStatisticsDto)
                 .build();
 
+        // TODO potential bottleneck
         statisticsRepository.updateStatistics(updatedStatistics);
     }
 

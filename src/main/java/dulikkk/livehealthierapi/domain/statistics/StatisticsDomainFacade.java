@@ -27,6 +27,14 @@ public class StatisticsDomainFacade {
         statisticsUpdater.updateStatisticsOnNewDay();
     }
 
+    public void doneTraining(String userId) {
+        statisticsUpdater.doneTraining(userId);
+    }
+
+    public void doneSuperChallenge(String userId) {
+        statisticsUpdater.doneSuperChallenge(userId);
+    }
+
     public void updateBmiStatistics(UpdateBmiStatisticsCommand updateBmiStatisticsCommand) {
         statisticsUpdater.updateBmiStatistics(updateBmiStatisticsCommand);
     }
