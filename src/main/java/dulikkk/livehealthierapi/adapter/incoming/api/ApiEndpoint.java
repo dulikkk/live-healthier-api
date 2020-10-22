@@ -16,6 +16,8 @@ public class ApiEndpoint {
 
     public static final String DONE_SUPER_CHALLENGE = "/statistics/done-challenge";
 
+    public static final String GET_USER_STATISTICS = "statistics";
+
     public static final String UPDATE_HEIGHT = "/user/height";
 
     public static final String UPDATE_WEIGHT = "/user/weight";

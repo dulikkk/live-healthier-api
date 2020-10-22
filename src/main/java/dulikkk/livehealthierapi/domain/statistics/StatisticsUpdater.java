@@ -38,9 +38,10 @@ class StatisticsUpdater {
             case WEDNESDAY:
             case FRIDAY:
             case SATURDAY: {
-                incrementDaysOfTrainingAndSuperChallenge();
+                incrementDaysOfTraining();
             }
         }
+        incrementDaysOfSuperChallenges();
     }
 
     void updateWeightStatistics(UpdateWeightStatisticsCommand updateWeightStatisticsCommand) {
@@ -254,12 +255,17 @@ class StatisticsUpdater {
         statisticsRepository.updateStatistics(updatedStatistics);
     }
 
-    private void incrementDaysOfTrainingAndSuperChallenge() {
+    private void incrementDaysOfTraining() {
         statisticsRepository.getAllStatistics()
-                .forEach(this::incrementDaysOfTrainingAndSuperChallengeForSpecificStatisticsDto);
+                .forEach(this::incrementDaysOfTrainingForSpecificStatisticsDto);
     }
 
-    private void incrementDaysOfTrainingAndSuperChallengeForSpecificStatisticsDto(StatisticsDto statisticsDto) {
+    private void incrementDaysOfSuperChallenges(){
+        statisticsRepository.getAllStatistics()
+                .forEach(this::incrementDaysOfSuperChallengesForSpecificStatisticsDto);
+    }
+
+    private void incrementDaysOfTrainingForSpecificStatisticsDto(StatisticsDto statisticsDto) {
         TrainingStatisticsDto oldTrainingStatisticsDto = statisticsDto.getTrainingStatisticsDto();
         TrainingStatisticsDto trainingStatisticsDto = TrainingStatisticsDto.builder()
                 .doneTrainingsThisWeek(oldTrainingStatisticsDto.getDoneTrainingsThisWeek())
@@ -270,6 +276,21 @@ class StatisticsUpdater {
                 .allTrainings(oldTrainingStatisticsDto.getAllTrainings() + 1)
                 .build();
 
+        StatisticsDto updatedStatistics = StatisticsDto.builder()
+                .id(statisticsDto.getId())
+                .userId(statisticsDto.getUserId())
+                .bmiStatisticsDto(statisticsDto.getBmiStatisticsDto())
+                .heightStatisticsDto(statisticsDto.getHeightStatisticsDto())
+                .weightStatisticsDto(statisticsDto.getWeightStatisticsDto())
+                .trainingStatisticsDto(trainingStatisticsDto)
+                .superChallengeStatisticsDto(statisticsDto.getSuperChallengeStatisticsDto())
+                .build();
+
+        // TODO potential bottleneck
+        statisticsRepository.updateStatistics(updatedStatistics);
+    }
+
+    private void incrementDaysOfSuperChallengesForSpecificStatisticsDto(StatisticsDto statisticsDto){
         SuperChallengeStatisticsDto oldSuperChallengeStatisticsDto = statisticsDto.getSuperChallengeStatisticsDto();
         SuperChallengeStatisticsDto superChallengeStatisticsDto = SuperChallengeStatisticsDto.builder()
                 .allSuperChallengesThisWeek(oldSuperChallengeStatisticsDto.getAllSuperChallengesThisWeek() + 1)
@@ -286,7 +307,7 @@ class StatisticsUpdater {
                 .bmiStatisticsDto(statisticsDto.getBmiStatisticsDto())
                 .heightStatisticsDto(statisticsDto.getHeightStatisticsDto())
                 .weightStatisticsDto(statisticsDto.getWeightStatisticsDto())
-                .trainingStatisticsDto(trainingStatisticsDto)
+                .trainingStatisticsDto(statisticsDto.getTrainingStatisticsDto())
                 .superChallengeStatisticsDto(superChallengeStatisticsDto)
                 .build();
 

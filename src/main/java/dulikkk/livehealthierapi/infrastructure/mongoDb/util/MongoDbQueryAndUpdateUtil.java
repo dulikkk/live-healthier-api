@@ -46,20 +46,6 @@ public class MongoDbQueryAndUpdateUtil {
         return new Query(where("trainingType").is(BREAK));
     }
 
-    public Query planQueryByUserId(String userId) {
-        Query query = new Query(where("id").is(userId));
-        query.fields().include("plan").exclude("id");
-        return query;
-    }
-
-    // statistics
-
-    public Query statisticsQueryByUserId(String userId) {
-        Query query = new Query(where("id").is(userId));
-//        query.fields().include("statistics").exclude("id");
-        return query;
-    }
-
     // updates
 
     // user

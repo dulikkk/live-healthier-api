@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -33,8 +34,9 @@ class MongoDbStatisticsRepository implements StatisticsRepository {
 
     @Override
     public List<StatisticsDto> getAllStatistics() {
-        return mongoTemplate.find(new Query(), StatisticsDocument.class, "user")
+        return mongoTemplate.find(new Query(), UserDocument.class, "user")
                 .stream()
+                .map(UserDocument::getStatistics)
                 .map(statisticsConverter::toDto)
                 .collect(Collectors.toList());
     }

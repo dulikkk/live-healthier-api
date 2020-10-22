@@ -21,7 +21,7 @@ class MongoDbStatisticsQueryRepository implements StatisticsQueryRepository {
     @Override
     public Optional<StatisticsDto> getStatisticsByUserId(String userId) {
         return Optional.ofNullable(mongoTemplate
-                .findOne(mongoDbQueryAndUpdateUtil.statisticsQueryByUserId(userId), UserDocument.class, "user"))
+                .findOne(mongoDbQueryAndUpdateUtil.userIdQuery(userId), UserDocument.class, "user"))
                 .map(UserDocument::getStatistics)
                 .map(statisticsConverter::toDto);
     }

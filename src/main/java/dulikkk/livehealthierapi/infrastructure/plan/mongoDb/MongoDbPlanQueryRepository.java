@@ -21,7 +21,7 @@ class MongoDbPlanQueryRepository implements PlanQueryRepository {
     @Override
     public Optional<PlanDto> getPlanByUserId(String userId) {
         return Optional.ofNullable(mongoTemplate
-                .findOne(mongoDbQueryAndUpdateUtil.statisticsQueryByUserId(userId), UserDocument.class, "user"))
+                .findOne(mongoDbQueryAndUpdateUtil.userIdQuery(userId), UserDocument.class, "user"))
                 .map(UserDocument::getPlan)
                 .map(planConverter::toDto);
     }

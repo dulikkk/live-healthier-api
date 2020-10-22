@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,6 +20,7 @@ import static dulikkk.livehealthierapi.domain.plan.dto.TrainingTypeDto.*;
 import static java.util.UUID.randomUUID;
 
 @SpringBootApplication
+@EnableScheduling
 @EnableEncryptableProperties
 public class LiveHealthierApiApplication {
 

@@ -3,6 +3,10 @@ package dulikkk.livehealthierapi.adapter.incoming.api.statistics;
 import dulikkk.livehealthierapi.adapter.incoming.api.ApiEndpoint;
 import dulikkk.livehealthierapi.adapter.incoming.api.ApiResponse;
 import dulikkk.livehealthierapi.domain.statistics.StatisticsDomainFacade;
+import dulikkk.livehealthierapi.domain.statistics.dto.StatisticsDto;
+import dulikkk.livehealthierapi.domain.statistics.dto.exception.CannotFindStatisticsException;
+import dulikkk.livehealthierapi.domain.statistics.query.StatisticsQueryRepository;
+import dulikkk.livehealthierapi.domain.user.dto.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +20,14 @@ import static java.time.LocalDateTime.now;
 public class StatisticsController {
 
     private final StatisticsDomainFacade statisticsDomainFacade;
+    private final StatisticsQueryRepository statisticsQueryRepository;
 
     @PatchMapping(ApiEndpoint.DONE_TRAINING)
     ResponseEntity<ApiResponse> doneTraining(@RequestParam("id") String userId) {
         if (userId == null) {
             return returnDidntPassUserId();
         } else {
-             statisticsDomainFacade.doneTraining(userId);
+            statisticsDomainFacade.doneTraining(userId);
             return returnOk();
         }
     }
@@ -34,6 +39,18 @@ public class StatisticsController {
         } else {
             statisticsDomainFacade.doneSuperChallenge(userId);
             return returnOk();
+        }
+    }
+
+    @GetMapping(ApiEndpoint.GET_USER_STATISTICS)
+    ResponseEntity<StatisticsDto> getStatisticsByUserId(@RequestParam("id") String userId) {
+        if (userId == null) {
+            throw new UserException("Nie podano identyfikatora użytkownika");
+        } else {
+            StatisticsDto statisticsDto = statisticsQueryRepository.getStatisticsByUserId(userId)
+                    .orElseThrow(() -> new CannotFindStatisticsException(
+                            "Nie można znaleźć twoich statystyk :( Spróbuj ponownie później"));
+            return ResponseEntity.ok(statisticsDto);
         }
     }
 

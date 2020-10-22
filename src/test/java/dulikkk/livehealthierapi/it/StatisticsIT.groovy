@@ -2,6 +2,7 @@ package dulikkk.livehealthierapi.it
 
 import dulikkk.livehealthierapi.adapter.incoming.api.ApiEndpoint
 import dulikkk.livehealthierapi.adapter.incoming.api.ApiResponse
+import dulikkk.livehealthierapi.adapter.incoming.api.statistics.StatisticsSchedulingUpdate
 import dulikkk.livehealthierapi.adapter.security.authentication.AuthenticatedUserInfo
 import dulikkk.livehealthierapi.adapter.security.authentication.AuthenticationRequest
 import dulikkk.livehealthierapi.domain.statistics.dto.StatisticsDto
@@ -31,6 +32,9 @@ class StatisticsIT extends AbstractIT {
     @Autowired
     StatisticsQueryRepository statisticsQueryRepository
 
+    @Autowired
+    StatisticsSchedulingUpdate statisticsSchedulingUpdate
+
     NewUserInfoCommand newUserInfoCommand = NewUserInfoCommand.builder()
             .sex(SexDto.MALE)
             .birthdate(2000)
@@ -48,7 +52,7 @@ class StatisticsIT extends AbstractIT {
         // activate
         UserDocument userDocumentToActivate = mongoTemplate.findOne(new Query(where("username")
                 .is(goodNewUserCommand.getUsername())), UserDocument.class)
-                userId = userDocumentToActivate.getId()
+        userId = userDocumentToActivate.getId()
         UserDto userDto = UserDto.builder()
                 .id(userDocumentToActivate.getId())
                 .username(userDocumentToActivate.getUsername())
@@ -102,5 +106,13 @@ class StatisticsIT extends AbstractIT {
         superChallengeStatisticsDto.getDoneAllSuperChallenges() == 1
         superChallengeStatisticsDto.getDoneSuperChallengesThisMonth() == 1
         superChallengeStatisticsDto.getDoneSuperChallengesThisWeek() == 1
+    }
+
+    def "get user statistics"() {
+        when: "trying to retrieve user statistics by his id"
+        StatisticsDto statisticsDto = testRestTemplate.getForObject(baseUrl + ApiEndpoint.GET_USER_STATISTICS + "?id=" + userId, StatisticsDto)
+
+        then: "the system should return statistics"
+        statisticsDto != null
     }
 }
