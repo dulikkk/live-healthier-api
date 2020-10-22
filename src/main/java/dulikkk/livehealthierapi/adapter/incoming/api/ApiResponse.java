@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Value
 public class ApiResponse {
 
-    String content;
+    Object content;
 
     int status;
 

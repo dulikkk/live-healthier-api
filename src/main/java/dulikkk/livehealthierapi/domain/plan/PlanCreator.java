@@ -86,6 +86,7 @@ class PlanCreator {
         return PlanDto.builder()
                 .userId(userId)
                 .userLevel(userLevel)
+                .availableChangesThiWeek(2)
                 .monday(breakDay)
                 .tuesday(firstTraining)
                 .wednesday(secondTraining)

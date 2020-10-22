@@ -19,4 +19,8 @@ public class ApiEndpoint {
     public static final String UPDATE_HEIGHT = "/user/height";
 
     public static final String UPDATE_WEIGHT = "/user/weight";
+
+    public static final String CHANGE_TRAINING = "/plan/change-training";
+
+    public static final String GET_USER_PLAN = "/plan";
 }

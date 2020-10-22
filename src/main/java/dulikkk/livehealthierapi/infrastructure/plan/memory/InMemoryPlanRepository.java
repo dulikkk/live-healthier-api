@@ -3,7 +3,7 @@ package dulikkk.livehealthierapi.infrastructure.plan.memory;
 import dulikkk.livehealthierapi.domain.plan.dto.DifficultyLevelDto;
 import dulikkk.livehealthierapi.domain.plan.dto.PlanDto;
 import dulikkk.livehealthierapi.domain.plan.dto.TrainingDto;
-import dulikkk.livehealthierapi.domain.plan.dto.exception.PlanException;
+import dulikkk.livehealthierapi.domain.plan.dto.exception.PlanServerException;
 import dulikkk.livehealthierapi.domain.plan.port.outgoing.PlanRepository;
 import dulikkk.livehealthierapi.domain.plan.query.PlanQueryRepository;
 
@@ -142,7 +142,7 @@ public class InMemoryPlanRepository implements PlanRepository, PlanQueryReposito
                 .stream()
                 .filter(trainingDto -> trainingDto.getTrainingDifficultyDto() == difficultyLevelDto)
                 .findAny()
-                .orElseThrow(() -> new PlanException("Ups, nie można znaleźć takiego treningu"));
+                .orElseThrow(() -> new PlanServerException("Ups, nie można znaleźć takiego treningu"));
     }
 
     @Override
@@ -151,7 +151,7 @@ public class InMemoryPlanRepository implements PlanRepository, PlanQueryReposito
                 .stream()
                 .filter(trainingDto -> trainingDto.getTrainingTypeDto() == BREAK)
                 .findAny()
-                .orElseThrow(() -> new PlanException("Ups, nie znaleziono wolnego dnia"));
+                .orElseThrow(() -> new PlanServerException("Ups, nie znaleziono wolnego dnia"));
     }
 
     @Override

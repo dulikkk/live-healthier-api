@@ -13,6 +13,8 @@ public class PlanDto {
 
     DifficultyLevelDto userLevel;
 
+    int availableChangesThiWeek;
+
     TrainingDto monday;
 
     TrainingDto tuesday;

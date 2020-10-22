@@ -19,6 +19,8 @@ public class PlanDocument {
 
     DifficultyLevelDto userLevel;
 
+    int availableChangesThisWeek;
+
     TrainingDto monday;
 
     TrainingDto tuesday;

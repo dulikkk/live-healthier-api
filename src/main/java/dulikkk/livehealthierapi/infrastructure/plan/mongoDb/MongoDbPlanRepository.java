@@ -3,7 +3,7 @@ package dulikkk.livehealthierapi.infrastructure.plan.mongoDb;
 import dulikkk.livehealthierapi.domain.plan.dto.DifficultyLevelDto;
 import dulikkk.livehealthierapi.domain.plan.dto.PlanDto;
 import dulikkk.livehealthierapi.domain.plan.dto.TrainingDto;
-import dulikkk.livehealthierapi.domain.plan.dto.exception.PlanException;
+import dulikkk.livehealthierapi.domain.plan.dto.exception.PlanServerException;
 import dulikkk.livehealthierapi.domain.plan.port.outgoing.PlanRepository;
 import dulikkk.livehealthierapi.infrastructure.mongoDb.util.MongoDbQueryAndUpdateUtil;
 import dulikkk.livehealthierapi.infrastructure.plan.mongoDb.training.TrainingConverter;
@@ -34,7 +34,7 @@ class MongoDbPlanRepository implements PlanRepository {
         if (!trainings.isEmpty()) {
             return trainingConverter.toDto(trainings.get(random.nextInt(trainings.size())));
         } else {
-            throw new PlanException("Nie znaleziono treningu :( Spróbuj ponownie później");
+            throw new PlanServerException("Nie znaleziono treningu :( Spróbuj ponownie później");
         }
     }
 
@@ -44,7 +44,7 @@ class MongoDbPlanRepository implements PlanRepository {
                 .stream()
                 .findAny()
                 .map(trainingConverter::toDto)
-                .orElseThrow(() -> new PlanException("Nie znaleziono treningu :( Spróbuj ponownie później"));
+                .orElseThrow(() -> new PlanServerException("Nie znaleziono treningu :( Spróbuj ponownie później"));
     }
 
     @Override
