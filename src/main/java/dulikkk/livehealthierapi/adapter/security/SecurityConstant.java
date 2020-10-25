@@ -14,7 +14,7 @@ public enum SecurityConstant {
 
     TOKEN_AUDIENCE("book-management-app"),
 
-    ACCESS_TOKEN_EXPIRATION_TIME_IN_MILLISECONDS(10 * 1000); // 10 minutes
+    ACCESS_TOKEN_EXPIRATION_TIME_IN_MILLISECONDS(10 * 60 * 1000); // 10 minutes
 
     SecurityConstant(String constant) {
         this.constant = constant;

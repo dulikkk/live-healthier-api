@@ -34,9 +34,14 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
-        getAuthentication(httpServletRequest)
-                .ifPresent(auth -> SecurityContextHolder.getContext().setAuthentication(auth)
-                );
+        if(httpServletRequest.getRequestURI().contains("/auth/")){
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(null, null, null));
+        }else {
+            getAuthentication(httpServletRequest)
+                    .ifPresent(auth -> SecurityContextHolder.getContext().setAuthentication(auth)
+                    );
+        }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }

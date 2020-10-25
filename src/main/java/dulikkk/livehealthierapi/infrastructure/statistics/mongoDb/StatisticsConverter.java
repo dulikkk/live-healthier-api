@@ -13,6 +13,8 @@ public class StatisticsConverter {
                 .weightStatistics(statisticsDto.getWeightStatisticsDto())
                 .superChallengeStatistics(statisticsDto.getSuperChallengeStatisticsDto())
                 .trainingStatistics(statisticsDto.getTrainingStatisticsDto())
+                .todaySuperChallengeDone(statisticsDto.isTodaySuperChallengeDone())
+                .todayTrainingDone(statisticsDto.isTodayTrainingDone())
                 .build();
     }
 
@@ -25,6 +27,8 @@ public class StatisticsConverter {
                 .weightStatisticsDto(statisticsDocument.getWeightStatistics())
                 .superChallengeStatisticsDto(statisticsDocument.getSuperChallengeStatistics())
                 .trainingStatisticsDto(statisticsDocument.getTrainingStatistics())
+                .todaySuperChallengeDone(statisticsDocument.isTodaySuperChallengeDone())
+                .todayTrainingDone(statisticsDocument.isTodayTrainingDone())
                 .build();
     }
 }

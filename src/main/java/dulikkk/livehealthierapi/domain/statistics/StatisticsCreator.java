@@ -7,6 +7,8 @@ import dulikkk.livehealthierapi.domain.user.dto.exception.CannotFindUserExceptio
 import dulikkk.livehealthierapi.domain.user.query.UserQueryRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
+
 import static java.time.LocalDate.now;
 
 @RequiredArgsConstructor
@@ -39,19 +41,32 @@ class StatisticsCreator {
                 .lastUpdateDate(now())
                 .build();
 
+        LocalDate localDate = LocalDate.now();
+        int initialTrainings = 0;
+        boolean todayTrainingDone = true;
+        switch(localDate.getDayOfWeek()){
+            case TUESDAY:
+            case WEDNESDAY:
+            case FRIDAY:
+            case SATURDAY:{
+                initialTrainings = 1;
+                todayTrainingDone= false;
+            }
+        }
+
         TrainingStatisticsDto trainingStatisticsDto = TrainingStatisticsDto.builder()
-                .allTrainings(0)
-                .allTrainingsThisMonth(0)
-                .allTrainingsThisWeek(0)
+                .allTrainings(initialTrainings)
+                .allTrainingsThisMonth(initialTrainings)
+                .allTrainingsThisWeek(initialTrainings)
                 .doneAllTrainings(0)
                 .doneTrainingsThisMonth(0)
                 .doneTrainingsThisWeek(0)
                 .build();
 
         SuperChallengeStatisticsDto superChallengeStatisticsDto = SuperChallengeStatisticsDto.builder()
-                .allSuperChallenges(0)
-                .allSuperChallengesThisMonth(0)
-                .allSuperChallengesThisWeek(0)
+                .allSuperChallenges(1)
+                .allSuperChallengesThisMonth(1)
+                .allSuperChallengesThisWeek(1)
                 .doneAllSuperChallenges(0)
                 .doneSuperChallengesThisMonth(0)
                 .doneSuperChallengesThisWeek(0)
@@ -64,6 +79,8 @@ class StatisticsCreator {
                 .bmiStatisticsDto(bmiStatisticsDto)
                 .trainingStatisticsDto(trainingStatisticsDto)
                 .superChallengeStatisticsDto(superChallengeStatisticsDto)
+                .todayTrainingDone(todayTrainingDone)
+                .todaySuperChallengeDone(false)
                 .build();
 
         statisticsRepository.saveStatistics(statisticsDto);

@@ -22,7 +22,7 @@ public class StatisticsController {
     private final StatisticsDomainFacade statisticsDomainFacade;
     private final StatisticsQueryRepository statisticsQueryRepository;
 
-    @PatchMapping(ApiEndpoint.DONE_TRAINING)
+    @GetMapping(ApiEndpoint.DONE_TRAINING)
     ResponseEntity<ApiResponse> doneTraining(@RequestParam("id") String userId) {
         if (userId == null) {
             return returnDidntPassUserId();
@@ -32,7 +32,7 @@ public class StatisticsController {
         }
     }
 
-    @PatchMapping(ApiEndpoint.DONE_SUPER_CHALLENGE)
+    @GetMapping(ApiEndpoint.DONE_SUPER_CHALLENGE)
     ResponseEntity<ApiResponse> doneSuperChallenge(@RequestParam("id") String userId) {
         if (userId == null) {
             return returnDidntPassUserId();

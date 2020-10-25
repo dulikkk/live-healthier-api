@@ -20,4 +20,8 @@ public class StatisticsDto {
     TrainingStatisticsDto trainingStatisticsDto;
 
     BmiStatisticsDto bmiStatisticsDto;
+
+    boolean todayTrainingDone;
+
+    boolean todaySuperChallengeDone;
 }

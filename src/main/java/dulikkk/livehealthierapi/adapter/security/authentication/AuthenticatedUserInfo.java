@@ -17,4 +17,10 @@ public class AuthenticatedUserInfo {
     String email;
 
     Set<UserRoleDto> roles;
+
+    double heightInCm;
+
+    double weightInKg;
+
+    double bmi;
 }

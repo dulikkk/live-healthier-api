@@ -74,7 +74,7 @@ class SecurityIT extends AbstractIT {
 
     def "sign up with bad parameters"() {
         given: "bad new user command and sign up request"
-        NewUserCommand badNewUserCommand = new NewUserCommand("ok", "Kub4k1gmail.com", "Secret_Password", newUserInfoCommand)
+        NewUserCommand badNewUserCommand = new NewUserCommand("dulikkkkk", "Kub4k1gmail.com", "Secret_Password", newUserInfoCommand)
         HttpEntity<NewUserCommand> badSignUpRequest = new HttpEntity<>(badNewUserCommand, headers)
 
         when: "trying to register with bad parameters"
@@ -100,7 +100,7 @@ class SecurityIT extends AbstractIT {
     def "authenticate user with bad credentials"() {
         given: "bad authentication request"
         HttpEntity<AuthenticationRequest> badAuthenticationRequest = new HttpEntity<>(
-                new AuthenticationRequest("badUsername", "badPassword"), headers)
+                new AuthenticationRequest("dulikkkkk", "badPassword"), headers)
 
         when: "trying to authenticate user with bad credentials"
         def result = testRestTemplate.postForEntity(baseUrl + ApiEndpoint.SIGN_IN, badAuthenticationRequest, String.class)

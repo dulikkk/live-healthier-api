@@ -89,6 +89,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .username(authUser.getUsername())
                 .email(authUser.getEmail())
                 .roles(authUser.getRoles())
+                .heightInCm(authUser.getUserInfoDto().getHeightInCm())
+                .weightInKg(authUser.getUserInfoDto().getWeightInKg())
+                .bmi(authUser.getUserInfoDto().getBmi())
                 .build();
 
         ObjectMapper jsonMapper = new ObjectMapper();

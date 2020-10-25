@@ -32,6 +32,11 @@ class StatisticsUpdater {
         switch (dayOfWeek) {
             case MONDAY: {
                 clearWeekStatistics();
+                todayTrainingDoneTrue();
+            }
+            case THURSDAY:
+            case SUNDAY:{
+                todayTrainingDoneTrue();
             }
             break;
             case TUESDAY:
@@ -42,6 +47,27 @@ class StatisticsUpdater {
             }
         }
         incrementDaysOfSuperChallenges();
+    }
+
+    private void todayTrainingDoneTrue() {
+        statisticsRepository.getAllStatistics()
+                .forEach(this::todayTrainingDoneTrueForSpecificStatisticsDto);
+    }
+
+    private void todayTrainingDoneTrueForSpecificStatisticsDto(StatisticsDto statisticsDto) {
+        StatisticsDto newStatisticsDtoToSave = StatisticsDto.builder()
+                .bmiStatisticsDto(statisticsDto.getBmiStatisticsDto())
+                .heightStatisticsDto(statisticsDto.getHeightStatisticsDto())
+                .weightStatisticsDto(statisticsDto.getWeightStatisticsDto())
+                .trainingStatisticsDto(statisticsDto.getTrainingStatisticsDto())
+                .superChallengeStatisticsDto(statisticsDto.getSuperChallengeStatisticsDto())
+                .id(statisticsDto.getId())
+                .userId(statisticsDto.getUserId())
+                .todayTrainingDone(true)
+                .todaySuperChallengeDone(statisticsDto.isTodaySuperChallengeDone())
+                .build();
+
+        statisticsRepository.updateStatistics(newStatisticsDtoToSave);
     }
 
     void updateWeightStatistics(UpdateWeightStatisticsCommand updateWeightStatisticsCommand) {
@@ -64,6 +90,8 @@ class StatisticsUpdater {
                 .superChallengeStatisticsDto(statisticsDto.getSuperChallengeStatisticsDto())
                 .id(statisticsDto.getId())
                 .userId(statisticsDto.getUserId())
+                .todayTrainingDone(statisticsDto.isTodayTrainingDone())
+                .todaySuperChallengeDone(statisticsDto.isTodaySuperChallengeDone())
                 .build();
 
         statisticsRepository.updateStatistics(newStatisticsDtoToSave);
@@ -89,6 +117,8 @@ class StatisticsUpdater {
                 .superChallengeStatisticsDto(statisticsDto.getSuperChallengeStatisticsDto())
                 .id(statisticsDto.getId())
                 .userId(statisticsDto.getUserId())
+                .todayTrainingDone(statisticsDto.isTodayTrainingDone())
+                .todaySuperChallengeDone(statisticsDto.isTodaySuperChallengeDone())
                 .build();
 
         statisticsRepository.updateStatistics(newStatisticsDtoToSave);
@@ -114,6 +144,8 @@ class StatisticsUpdater {
                 .superChallengeStatisticsDto(statisticsDto.getSuperChallengeStatisticsDto())
                 .id(statisticsDto.getId())
                 .userId(statisticsDto.getUserId())
+                .todayTrainingDone(statisticsDto.isTodayTrainingDone())
+                .todaySuperChallengeDone(statisticsDto.isTodaySuperChallengeDone())
                 .build();
 
         statisticsRepository.updateStatistics(newStatisticsDtoToSave);
@@ -142,6 +174,8 @@ class StatisticsUpdater {
                 .weightStatisticsDto(statisticsDto.getWeightStatisticsDto())
                 .trainingStatisticsDto(trainingStatisticsDto)
                 .superChallengeStatisticsDto(statisticsDto.getSuperChallengeStatisticsDto())
+                .todayTrainingDone(true)
+                .todaySuperChallengeDone(statisticsDto.isTodaySuperChallengeDone())
                 .build();
 
         statisticsRepository.updateStatistics(updatedStatistics);
@@ -170,6 +204,8 @@ class StatisticsUpdater {
                 .weightStatisticsDto(statisticsDto.getWeightStatisticsDto())
                 .trainingStatisticsDto(statisticsDto.getTrainingStatisticsDto())
                 .superChallengeStatisticsDto(superChallengeStatisticsDto)
+                .todayTrainingDone(statisticsDto.isTodayTrainingDone())
+                .todaySuperChallengeDone(true)
                 .build();
 
         statisticsRepository.updateStatistics(updatedStatistics);
@@ -284,6 +320,8 @@ class StatisticsUpdater {
                 .weightStatisticsDto(statisticsDto.getWeightStatisticsDto())
                 .trainingStatisticsDto(trainingStatisticsDto)
                 .superChallengeStatisticsDto(statisticsDto.getSuperChallengeStatisticsDto())
+                .todaySuperChallengeDone(statisticsDto.isTodaySuperChallengeDone())
+                .todayTrainingDone(false)
                 .build();
 
         // TODO potential bottleneck
@@ -309,6 +347,8 @@ class StatisticsUpdater {
                 .weightStatisticsDto(statisticsDto.getWeightStatisticsDto())
                 .trainingStatisticsDto(statisticsDto.getTrainingStatisticsDto())
                 .superChallengeStatisticsDto(superChallengeStatisticsDto)
+                .todaySuperChallengeDone(false)
+                .todayTrainingDone(statisticsDto.isTodayTrainingDone())
                 .build();
 
         // TODO potential bottleneck

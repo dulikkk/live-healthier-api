@@ -1,6 +1,7 @@
 package dulikkk.livehealthierapi.adapter.security;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Component
 public class AuthExceptionHandler extends OncePerRequestFilter {
 
     @Override
@@ -16,7 +18,7 @@ public class AuthExceptionHandler extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (RuntimeException e) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+            response.sendError(HttpStatus.FORBIDDEN.value(), e.getMessage());
         }
     }
 }

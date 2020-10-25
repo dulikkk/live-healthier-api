@@ -18,6 +18,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+
 import static java.time.LocalDateTime.now;
 
 @RequiredArgsConstructor
@@ -42,16 +44,10 @@ class SecurityController {
     }
 
     @GetMapping(ApiEndpoint.USER_ACTIVATION)
-    ResponseEntity<ApiResponse> verifyActivationToken(@RequestParam String token) {
+    void verifyActivationToken(@RequestParam String token, HttpServletResponse httpServletResponse) throws IOException {
         userDomainFacade.activateUser(token);
 
-        ApiResponse apiResponse = ApiResponse.builder()
-                .content("Twoje konto zostało zaaktywowane pomyślnie :D")
-                .status(HttpStatus.OK.value())
-                .timestamp(now())
-                .build();
-
-        return ResponseEntity.ok(apiResponse);
+        httpServletResponse.sendRedirect("http://localhost:3000/");
     }
 
 

@@ -25,4 +25,8 @@ public class StatisticsDocument {
     TrainingStatisticsDto trainingStatistics;
 
     BmiStatisticsDto bmiStatistics;
+
+    boolean todayTrainingDone;
+
+    boolean todaySuperChallengeDone;
 }

@@ -38,12 +38,6 @@ class UserValidator {
         validateWeightInKg(newUserInfoCommand.getWeightInKg());
     }
 
-    public void validateBmi(double bmi) {
-        if (bmi < 5 || bmi > 50) {
-            throw new UserException("Czy to aby na pewno dobre bmi?");
-        }
-    }
-
     public void validateHeightInCm(double heightInCm) {
         if (heightInCm <= 60 || heightInCm >= 230) {
             throw new UserException("Czy to aby na pewno twój wzrost?");
@@ -62,6 +56,10 @@ class UserValidator {
             throw new UserException("Nazwa użytkownika nie może być pusta");
         }
 
+        if(newUserCommand.getUsername().length() < 4 || newUserCommand.getUsername().length() > 15){
+            throw new UserException("Nazwa użytkownika musie zawierać od 4 do 15 znaków");
+        }
+
         if (!emailValidator.isValid(newUserCommand.getEmail())) {
             throw new UserException("Niepoprawny email");
         }
@@ -78,12 +76,12 @@ class UserValidator {
     private void checkIfThisUserExists(NewUserCommand newUserCommand) {
         userQueryRepository.findByEmail(newUserCommand.getEmail())
                 .ifPresent(fetchedUser -> {
-                    throw new UserException("Użytkownik z emailem " + newUserCommand.getEmail() + " już istnieje");
+                    throw new UserException("Istnieje już konto z takim emailem!");
                 });
         userQueryRepository.findByUsername(newUserCommand.getUsername())
                 .ifPresent(fetchedUser -> {
                     throw new UserException(
-                            "Nazwa użytkownika " + newUserCommand.getUsername() + " jest już zajęta");
+                            "Ta nazwa użytkownika jest zajęta");
                 });
     }
 
